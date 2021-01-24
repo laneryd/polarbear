@@ -116,18 +116,6 @@ def main():
     
     hex_n = 3*hex_depth*hex_depth+3*hex_depth+1 
     
-    elem = {}
-    elem_right = {}
-    elem_left = {}
-    count = 0
-    
-    for hex_id in arctic.matrix:
-        (i,j) = hex_id
-        elem[(i,j)] = count
-        elem_right[(-j,j+i)] = count
-        elem_left[(i+j,-i)]  = count
-        count = count + 1
-    
     ice_color  = []
     for hex_id in arctic.matrix:
         ice_color.append(random_ice_color())
@@ -136,7 +124,7 @@ def main():
     fpsClock = pygame.time.Clock()
             
     for hex_id in arctic.matrix:
-        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+        draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
 
     draw_api.highlight_hexagon((0,0))
     
@@ -152,7 +140,7 @@ def main():
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],off=astep)
+                            draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color),off=astep)
                         draw_api.highlight_hexagon((0,0))
                         pygame.display.update()
                         fpsClock.tick(FPS)
@@ -160,7 +148,7 @@ def main():
                     screen.fill(WHITE)
                     
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+                        draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
                             
                     draw_api.highlight_hexagon((0,0))
                     
@@ -168,20 +156,17 @@ def main():
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
+                            draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color),rot=astep)
                         draw_api.highlight_hexagon((0,0))
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
-                    
-                    new_ice_color = list(ice_color)
-                    for hex_id in arctic.matrix:
-                        new_ice_color[elem_left[hex_id]] = ice_color[elem[hex_id]]
-                    ice_color = new_ice_color
+                                        
+                    ice_color = geometry.rotate_right(arctic,ice_color)
 
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+                        draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
                             
                     draw_api.highlight_hexagon((0,0))
                      
@@ -189,20 +174,17 @@ def main():
                     for astep in linspace(0,-1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
+                            draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color),rot=astep)
                         draw_api.highlight_hexagon((0,0))
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
                     
-                    new_ice_color = list(ice_color)
-                    for hex_id in arctic.matrix:
-                        new_ice_color[elem_right[hex_id]] = ice_color[elem[hex_id]]
-                    ice_color = new_ice_color
+                    ice_color = geometry.rotate_left(arctic,ice_color)
                     
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+                        draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
                                                 
                     draw_api.highlight_hexagon((0,0))                   
                     
