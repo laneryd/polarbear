@@ -97,6 +97,7 @@ def random_ice_color():
     gray = blue*2
     
     return (255-gray,255-gray,255-blue)
+    #eturn (random.randrange(256),random.randrange(256),random.randrange(256))
     
 def get_hex_center(hexagon_id):
     (i,j) = hexagon_id
@@ -118,26 +119,35 @@ def main():
     
     hex_n = 3*hex_depth*hex_depth+3*hex_depth+1 
     
-    hex_number = []
+    hex_matrix = []
+    hex_array  = []
     elem = {}
+    elem_right = {}
+    elem_left = {}
     count = 0
     
     for j in range(hex_depth,-1,-1):
         hex_row = []
         for i in range(-hex_depth,hex_depth+1-j):
             hex_row.append((i,j))
+            hex_array.append(count)
             elem[(i,j)] = count
+            elem_right[(-j,j+i)] = count
+            elem_left[(i+j,-i)]  = count
             count = count + 1
-        hex_number.append(hex_row)
+        hex_matrix.append(hex_row)
 
     for j in range(-1,-hex_depth-1,-1):
         hex_row = []
         for i in range(-hex_depth-j,hex_depth+1):
             hex_row.append((i,j))
+            hex_array.append(count)
             elem[(i,j)] = count
+            elem_right[(-j,j+i)] = count
+            elem_left[(i+j,-i)]  = count
             count = count + 1
-        hex_number.append(hex_row)
-                
+        hex_matrix.append(hex_row)
+    
     ice_color  = []    
     for i in range(hex_n):
         ice_color.append(random_ice_color())
@@ -145,7 +155,7 @@ def main():
     draw_api = DrawAPI(screen)
     fpsClock = pygame.time.Clock()
     
-    for hex_row in hex_number:
+    for hex_row in hex_matrix:
         for hex_id in hex_row:
             draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
 
@@ -163,7 +173,7 @@ def main():
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
                         before = time.time()
-                        for hex_row in hex_number:
+                        for hex_row in hex_matrix:
                             for hex_id in hex_row:
                                 draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],off=astep)
                         draw_api.highlight_hexagon((0,0))
@@ -174,7 +184,7 @@ def main():
                     
                     screen.fill(WHITE)
                     
-                    for hex_row in hex_number:
+                    for hex_row in hex_matrix:
                             for hex_id in hex_row:
                                 draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
                             
@@ -184,7 +194,7 @@ def main():
                 if (event.key == K_RIGHT):
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
-                        for hex_row in hex_number:
+                        for hex_row in hex_matrix:
                             for hex_id in hex_row:
                                 draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
                         draw_api.highlight_hexagon((0,0))
@@ -193,7 +203,13 @@ def main():
                     
                     screen.fill(WHITE)
                     
-                    for hex_row in hex_number:
+                    new_ice_color = list(ice_color)
+                    for hex_row in hex_matrix:
+                        for hex_id in hex_row:
+                            new_ice_color[elem_left[hex_id]] = ice_color[elem[hex_id]]
+                    ice_color = new_ice_color
+                    
+                    for hex_row in hex_matrix:
                             for hex_id in hex_row:
                                 draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
                             
@@ -202,7 +218,7 @@ def main():
                 if (event.key == K_LEFT):
                     for astep in linspace(0,-1,20):
                         screen.fill(WHITE)
-                        for hex_row in hex_number:
+                        for hex_row in hex_matrix:
                             for hex_id in hex_row:
                                 draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
                         draw_api.highlight_hexagon((0,0))
@@ -211,7 +227,13 @@ def main():
                     
                     screen.fill(WHITE)
                     
-                    for hex_row in hex_number:
+                    new_ice_color = list(ice_color)
+                    for hex_row in hex_matrix:
+                        for hex_id in hex_row:
+                            new_ice_color[elem_right[hex_id]] = ice_color[elem[hex_id]]
+                    ice_color = new_ice_color
+                    
+                    for hex_row in hex_matrix:
                             for hex_id in hex_row:
                                 draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
                                                 
