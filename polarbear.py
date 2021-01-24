@@ -1,10 +1,10 @@
 import os
 import pygame, sys
-import time
 import random
 from pygame.locals import *
 from math import cos, sin, sqrt, pi
 from numpy import arange, linspace
+import geometry
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "3000,200"
 
@@ -61,8 +61,7 @@ def add_perspective(p):
     a = 2/3
     e = 2/3
     h = 1/20
-    
-    #return (a*x/abs(h*y+1),e*y/abs(h*y+1))
+ 
     return (a*x/(h*y+1),e*y/(h*y+1))
     
 def add_rotation(p,rotation_step):
@@ -89,15 +88,11 @@ def check_if_point_in_window(point):
     
     return (0 <= px <= wx and 0 <= py <= wy)
     
-def random_ice_color():
-    # gray = random.randrange(32)
-    # blue = min(random.randrange(16),gray)
-    
+def random_ice_color():    
     blue = random.randrange(16)
     gray = blue*2
     
     return (255-gray,255-gray,255-blue)
-    #eturn (random.randrange(256),random.randrange(256),random.randrange(256))
     
 def get_hex_center(hexagon_id):
     (i,j) = hexagon_id
@@ -115,49 +110,33 @@ def main():
 
     screen.fill(WHITE)
 
-    hex_depth = 20
+    hex_depth = 3
+    
+    arctic = geometry.Arctic(hex_depth)
     
     hex_n = 3*hex_depth*hex_depth+3*hex_depth+1 
     
-    hex_matrix = []
-    hex_array  = []
     elem = {}
     elem_right = {}
     elem_left = {}
     count = 0
     
-    for j in range(hex_depth,-1,-1):
-        hex_row = []
-        for i in range(-hex_depth,hex_depth+1-j):
-            hex_row.append((i,j))
-            hex_array.append(count)
-            elem[(i,j)] = count
-            elem_right[(-j,j+i)] = count
-            elem_left[(i+j,-i)]  = count
-            count = count + 1
-        hex_matrix.append(hex_row)
-
-    for j in range(-1,-hex_depth-1,-1):
-        hex_row = []
-        for i in range(-hex_depth-j,hex_depth+1):
-            hex_row.append((i,j))
-            hex_array.append(count)
-            elem[(i,j)] = count
-            elem_right[(-j,j+i)] = count
-            elem_left[(i+j,-i)]  = count
-            count = count + 1
-        hex_matrix.append(hex_row)
+    for hex_id in arctic.matrix:
+        (i,j) = hex_id
+        elem[(i,j)] = count
+        elem_right[(-j,j+i)] = count
+        elem_left[(i+j,-i)]  = count
+        count = count + 1
     
-    ice_color  = []    
-    for i in range(hex_n):
+    ice_color  = []
+    for hex_id in arctic.matrix:
         ice_color.append(random_ice_color())
 
     draw_api = DrawAPI(screen)
     fpsClock = pygame.time.Clock()
-    
-    for hex_row in hex_matrix:
-        for hex_id in hex_row:
-            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+            
+    for hex_id in arctic.matrix:
+        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
 
     draw_api.highlight_hexagon((0,0))
     
@@ -172,31 +151,24 @@ def main():
                     steptime = [] 
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
-                        before = time.time()
-                        for hex_row in hex_matrix:
-                            for hex_id in hex_row:
-                                draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],off=astep)
+                        for hex_id in arctic.matrix:
+                            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],off=astep)
                         draw_api.highlight_hexagon((0,0))
-                        after = time.time()
-                        steptime.append(after-before)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
                     
-                    for hex_row in hex_matrix:
-                            for hex_id in hex_row:
-                                draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+                    for hex_id in arctic.matrix:
+                        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
                             
                     draw_api.highlight_hexagon((0,0))
-                    #print(f"mean time: {sum(steptime)*1000/20}")
                     
                 if (event.key == K_RIGHT):
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
-                        for hex_row in hex_matrix:
-                            for hex_id in hex_row:
-                                draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
+                        for hex_id in arctic.matrix:
+                            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
                         draw_api.highlight_hexagon((0,0))
                         pygame.display.update()
                         fpsClock.tick(FPS)
@@ -204,23 +176,20 @@ def main():
                     screen.fill(WHITE)
                     
                     new_ice_color = list(ice_color)
-                    for hex_row in hex_matrix:
-                        for hex_id in hex_row:
-                            new_ice_color[elem_left[hex_id]] = ice_color[elem[hex_id]]
+                    for hex_id in arctic.matrix:
+                        new_ice_color[elem_left[hex_id]] = ice_color[elem[hex_id]]
                     ice_color = new_ice_color
-                    
-                    for hex_row in hex_matrix:
-                            for hex_id in hex_row:
-                                draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+
+                    for hex_id in arctic.matrix:
+                        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
                             
                     draw_api.highlight_hexagon((0,0))
                      
                 if (event.key == K_LEFT):
                     for astep in linspace(0,-1,20):
                         screen.fill(WHITE)
-                        for hex_row in hex_matrix:
-                            for hex_id in hex_row:
-                                draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
+                        for hex_id in arctic.matrix:
+                            draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]],rot=astep)
                         draw_api.highlight_hexagon((0,0))
                         pygame.display.update()
                         fpsClock.tick(FPS)
@@ -228,14 +197,12 @@ def main():
                     screen.fill(WHITE)
                     
                     new_ice_color = list(ice_color)
-                    for hex_row in hex_matrix:
-                        for hex_id in hex_row:
-                            new_ice_color[elem_right[hex_id]] = ice_color[elem[hex_id]]
+                    for hex_id in arctic.matrix:
+                        new_ice_color[elem_right[hex_id]] = ice_color[elem[hex_id]]
                     ice_color = new_ice_color
                     
-                    for hex_row in hex_matrix:
-                            for hex_id in hex_row:
-                                draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
+                    for hex_id in arctic.matrix:
+                        draw_api.draw_hexagon(hex_id,color=ice_color[elem[hex_id]])
                                                 
                     draw_api.highlight_hexagon((0,0))                   
                     
