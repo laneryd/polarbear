@@ -80,7 +80,7 @@ def window_coordinates(point):
     (px,py) = point
     (wx,wy) = WINDOWSIZE
     
-    return (0.5*wx+HEXSIDE*px,0.5*wy-HEXSIDE*py)
+    return (0.5*wx+HEXSIDE*px,0.7*wy-HEXSIDE*py)
     
 def check_if_point_in_window(point):
     (px,py) = point
@@ -93,6 +93,12 @@ def random_ice_color():
     gray = blue*2
     
     return (255-gray,255-gray,255-blue)
+    
+def ice_color_array(n):
+    l = []
+    for i in range(n):
+        l.append(random_ice_color())
+    return l
     
 def get_hex_center(hexagon_id):
     (i,j) = hexagon_id
@@ -110,15 +116,11 @@ def main():
 
     screen.fill(WHITE)
 
-    hex_depth = 3
+    hex_depth = 20
     
     arctic = geometry.Arctic(hex_depth)
-    
-    hex_n = 3*hex_depth*hex_depth+3*hex_depth+1 
-    
-    ice_color  = []
-    for hex_id in arctic.matrix:
-        ice_color.append(random_ice_color())
+
+    ice_color = ice_color_array(arctic.size)
 
     draw_api = DrawAPI(screen)
     fpsClock = pygame.time.Clock()
@@ -147,6 +149,8 @@ def main():
                     
                     screen.fill(WHITE)
                     
+                    ice_color = geometry.move_forward(arctic,ice_color,ice_color_array(2*arctic.depth+1))
+                    
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
                             
@@ -163,7 +167,7 @@ def main():
                     
                     screen.fill(WHITE)
                                         
-                    ice_color = geometry.rotate_right(arctic,ice_color)
+                    ice_color = geometry.turn_right(arctic,ice_color)
 
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
@@ -181,7 +185,7 @@ def main():
                     
                     screen.fill(WHITE)
                     
-                    ice_color = geometry.rotate_left(arctic,ice_color)
+                    ice_color = geometry.turn_left(arctic,ice_color)
                     
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
