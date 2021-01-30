@@ -1,3 +1,15 @@
+def new_position_left(hex_id):
+    (i,j) = hex_id
+    return (i+j,-i)
+
+def new_position_right(hex_id):
+    (i,j) = hex_id
+    return (-j,j+i)
+    
+def new_position_forward(hex_id):
+    (i,j) = hex_id
+    return (i,j-1)
+
 class Arctic:
     def __init__(self, depth):
         self.depth   = depth
@@ -28,27 +40,27 @@ class Arctic:
                 self.forward[(i,j-1)] = count
                 count = count + 1
 
-def turn_left(arctic,p):
-    q = list(p)
-    for hex_id in arctic.matrix:
-        q[arctic.left[hex_id]] = p[arctic.center[hex_id]]
-    return q
-    
-def turn_right(arctic,p):
-    q = list(p)
-    for hex_id in arctic.matrix:
-        q[arctic.right[hex_id]] = p[arctic.center[hex_id]]
-    return q
-    
-def move_forward(arctic,p,elem):
-    q = list(p)
-    for hex_id in arctic.matrix:
-        (i,j) = hex_id
-        if max(j,i+j) >= arctic.depth:
-            q[arctic.center[hex_id]] = elem.pop(0)
-        else:
-            q[arctic.center[hex_id]] = p[arctic.forward[hex_id]]
-    return q
+    def turn_left(self,p):
+        q = list(p)
+        for hex_id in self.matrix:
+            q[self.left[hex_id]] = p[self.center[hex_id]]
+        return q
+        
+    def turn_right(self,p):
+        q = list(p)
+        for hex_id in self.matrix:
+            q[self.right[hex_id]] = p[self.center[hex_id]]
+        return q
+        
+    def move_forward(self,p,elem):
+        q = list(p)
+        for hex_id in self.matrix:
+            (i,j) = hex_id
+            if max(j,i+j) >= self.depth:
+                q[self.center[hex_id]] = elem.pop(0)
+            else:
+                q[self.center[hex_id]] = p[self.forward[hex_id]]
+        return q
 
-def get(arctic,hex_id,p):
-    return p[arctic.center[hex_id]]
+    def get(self,hex_id,p):
+        return p[self.center[hex_id]]
