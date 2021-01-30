@@ -14,8 +14,9 @@ FPS = 30
 HEXSIDE       = 50
 WHITE         = (255,255,255)
 HEXEDGECOLOR  = (127,127,127)
-LIGHTBLUE     = (191,191,255)
+#LIGHTBLUE     = (191,191,255)
 BLUE          = (63, 63, 255)
+RED          = (255, 63, 63)
 SQRT3 = sqrt(3)
 
 class DrawAPI:
@@ -45,7 +46,7 @@ class DrawAPI:
             pygame.draw.polygon(self.display,color,h)
             pygame.draw.polygon(self.display,HEXEDGECOLOR,h,1)
         
-    def highlight_hexagon(self,hexagon_id):
+    def highlight_hexagon(self,hexagon_id,color):
         center = get_hex_center(hexagon_id)
         h = []
         for k in range(6):
@@ -54,7 +55,18 @@ class DrawAPI:
             corner = window_coordinates(corner)
             h.append(corner)
             
-        pygame.draw.polygon(self.display,BLUE,h)
+        pygame.draw.polygon(self.display,color,h)
+
+class Bear:
+    def __init__(self,position,color):
+        self.position = position
+        self.color = color
+        
+    def draw(self,draw_api):
+        draw_api.highlight_hexagon(self.position,self.color)
+        
+    def forward_shift(self,arctic):
+        self.position = geometry.move_forward(arctic,self.position,[])
 
 def add_perspective(p):
     (x,y) = p
@@ -128,7 +140,11 @@ def main():
     for hex_id in arctic.matrix:
         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
 
-    draw_api.highlight_hexagon((0,0))
+    player_bear = Bear((0,0),BLUE)
+    another_bear = Bear((2,2),RED) 
+    
+    player_bear.draw(draw_api)
+    another_bear.draw(draw_api)
     
     while True:
         for event in pygame.event.get():
@@ -143,7 +159,7 @@ def main():
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color),off=astep)
-                        draw_api.highlight_hexagon((0,0))
+                        player_bear.draw(draw_api)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
@@ -151,17 +167,20 @@ def main():
                     
                     ice_color = geometry.move_forward(arctic,ice_color,ice_color_array(2*arctic.depth+1))
                     
+                    #another_bear.forward_shift(arctic)
+                    
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
-                            
-                    draw_api.highlight_hexagon((0,0))
+                    
+                    player_bear.draw(draw_api)
+                    another_bear.draw(draw_api)
                     
                 if (event.key == K_RIGHT):
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color),rot=astep)
-                        draw_api.highlight_hexagon((0,0))
+                        player_bear.draw(draw_api)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
@@ -172,14 +191,15 @@ def main():
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
                             
-                    draw_api.highlight_hexagon((0,0))
+                    player_bear.draw(draw_api)
+                    another_bear.draw(draw_api)                
                      
                 if (event.key == K_LEFT):
                     for astep in linspace(0,-1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color),rot=astep)
-                        draw_api.highlight_hexagon((0,0))
+                        player_bear.draw(draw_api)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
@@ -190,7 +210,8 @@ def main():
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=geometry.get(arctic,hex_id,ice_color))
                                                 
-                    draw_api.highlight_hexagon((0,0))                   
+                    player_bear.draw(draw_api)
+                    another_bear.draw(draw_api)
                     
                 if (event.key == K_ESCAPE):
                     print(sys.getsizeof(draw_api.get_h_lookup))
