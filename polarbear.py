@@ -75,17 +75,19 @@ class Bear:
         self.position    = geometry.new_position(self.position,self.direction)
         self.destination = geometry.new_position(self.position,self.direction)
         
-    def draw_movement(self,draw_api,astep=0,rot=0):
+    def draw_movement(self,draw_api,astep=0,off=(0,0),rot=0):
         (ia,ja) = self.position
         (ib,jb) = self.destination
-        offset  = ((ib-ia)*astep, (jb-ja)*astep)
-        #offset = self.position*(1-astep) + self.destination*astep
-        #print(offset)
+        (io,ij) = off
+        offsum   = (io+(ib-ia)*astep,ij+(jb-ja)*astep)
         
-        #print(astep, ';', self.position, '-->', self.destination, ';', (ia+offset[0],ja+offset[1]))
-        #pos = self.position*(1-astep) + self.destination*astep
+        draw_api.highlight_hexagon(self.position,self.color,off=offsum,rot=rot)
         
-        draw_api.highlight_hexagon(self.position,self.color,off=offset,rot=rot)
+    def turn_left(self):
+        self.direction = (self.direction + 1) % 6
+        
+    def turn_right(self):
+        self.direction = (self.direction - 1) % 6
         
     def rotate_left(self):
         self.position = geometry.rotate_left(self.position)
@@ -98,12 +100,6 @@ class Bear:
         
     def set_destination(self):
         self.destination = geometry.new_position(self.position,self.direction)
-        #(i,j) = self.position
-        #d = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),4:(i+1,j-1),5:(i+1,j)}
-        #destination = d.get(self.direction)
-        #self.destination = destination
-        #self.destination = d.get(self.direction)
-        
 
 def add_perspective(p):
     (x,y) = p
@@ -178,7 +174,7 @@ def main():
         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
 
     player_bear = Bear((0,0),0,BLUE)
-    another_bear = Bear((2,0),0,RED) 
+    another_bear = Bear((1,0),0,RED) 
     
     player_bear.draw(draw_api)
     another_bear.draw(draw_api)
@@ -198,7 +194,7 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),off=(0,-astep))
                         player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,-astep)
+                        another_bear.draw_movement(draw_api,off=(0,-astep),astep=astep)
                         #after = time.time()
                         #steptime.append(after-before)
                         pygame.display.update()
@@ -214,6 +210,7 @@ def main():
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                     
                     player_bear.draw(draw_api)
+                    another_bear.move()
                     another_bear.draw(draw_api)
                     
                     #print(f"mean time: {sum(steptime)*1000/20}")
@@ -224,19 +221,21 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),rot=astep)
                         player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,rot=astep)
+                        another_bear.draw_movement(draw_api,rot=astep,astep=astep)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
                                         
                     ice_color = arctic.turn_right(ice_color)
+                    another_bear.turn_left()
                     another_bear.rotate_right()
 
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                             
                     player_bear.draw(draw_api)
+                    another_bear.move()
                     another_bear.draw(draw_api)                
                      
                 if (event.key == K_LEFT):
@@ -245,19 +244,21 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),rot=-astep)
                         player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,rot=-astep)
+                        another_bear.draw_movement(draw_api,rot=-astep,astep=astep)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
                     
                     ice_color = arctic.turn_left(ice_color)
+                    another_bear.turn_right()
                     another_bear.rotate_left()
                     
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                                                 
                     player_bear.draw(draw_api)
+                    another_bear.move()
                     another_bear.draw(draw_api)
 
                 if (event.key == K_DOWN):
