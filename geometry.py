@@ -1,14 +1,15 @@
-def new_position_left(hex_id):
+def rotate_left(hex_id):
     (i,j) = hex_id
     return (i+j,-i)
 
-def new_position_right(hex_id):
+def rotate_right(hex_id):
     (i,j) = hex_id
     return (-j,j+i)
     
-def new_position_forward(hex_id):
+def new_position(hex_id,direction):
     (i,j) = hex_id
-    return (i,j-1)
+    surrounding = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),4:(i+1,j-1),5:(i+1,j)}
+    return surrounding.get(direction)
 
 class Arctic:
     def __init__(self, depth):
