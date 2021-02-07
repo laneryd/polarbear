@@ -1,6 +1,6 @@
 import os
-import pygame, sys
-#import time
+import pygame
+import sys
 import random
 import draw
 import pygame.locals as pg
@@ -34,6 +34,18 @@ def add_trail(arctic,ia,bear):
     
     return ja
 
+def animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock):
+    for astep in linspace(0,1,20):
+        draw_api.clear()
+        for hex_id in arctic.matrix:
+            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+        player_bear.draw(draw_api)
+        another_bear.draw(draw_api,astep=astep)
+        pygame.display.update()
+        fpsClock.tick(FPS)
+    
+    draw_api.clear()
+
 def main():
     random.seed(0)
     
@@ -66,16 +78,13 @@ def main():
                 
             if event.type == pg.KEYDOWN:
                 if (event.key == pg.K_UP):
-                    #steptime = [] 
                     for astep in linspace(0,1,20):
                         draw_api.clear()
-                        #before = time.time()
+
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),off=(0,-astep))
                         player_bear.draw(draw_api)
                         another_bear.draw(draw_api,off=(0,-astep),astep=astep)
-                        #after = time.time()
-                        #steptime.append(after-before)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
@@ -93,8 +102,6 @@ def main():
                     player_bear.draw(draw_api)
                     another_bear.move()
                     another_bear.draw(draw_api)
-                    
-                    #print(f"mean time: {sum(steptime)*1000/20}")
                     
                 if (event.key == pg.K_RIGHT):
                     for astep in linspace(0,1,20):
@@ -145,18 +152,17 @@ def main():
                     another_bear.draw(draw_api)
 
                 if (event.key == pg.K_DOWN):
-                    another_bear.set_destination()
-                
-                    for astep in linspace(0,1,20):
-                        draw_api.clear()
-                        for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
-                        player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,astep=astep)
-                        pygame.display.update()
-                        fpsClock.tick(FPS)
+                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock)
+                    # for astep in linspace(0,1,20):
+                        # draw_api.clear()
+                        # for hex_id in arctic.matrix:
+                            # draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+                        # player_bear.draw(draw_api)
+                        # another_bear.draw(draw_api,astep=astep)
+                        # pygame.display.update()
+                        # fpsClock.tick(FPS)
                     
-                    draw_api.clear()
+                    # draw_api.clear()
                     
                     another_bear.move()                    
                                                             

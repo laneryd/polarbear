@@ -48,6 +48,3 @@ class Bear:
         self.position = geometry.adjacent(self.position,3)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.adjacent(self.trail[k],3)
-        
-    def set_destination(self):
-        self.destination = geometry.adjacent(self.position,self.direction)
