@@ -2,7 +2,7 @@ import os
 import pygame, sys
 #import time
 import random
-from pygame.locals import *
+import pygame.locals as pg
 from math import cos, sin, sqrt, pi
 from numpy import arange, linspace
 import geometry, bear
@@ -153,12 +153,12 @@ def main():
     
     while True:
         for event in pygame.event.get():
-            if event.type==QUIT:
+            if event.type == pg.QUIT:
                 pygame.quit()
                 sys.exit()
                 
-            if event.type == KEYDOWN:
-                if (event.key == K_UP):
+            if event.type == pg.KEYDOWN:
+                if (event.key == pg.K_UP):
                     #steptime = [] 
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
@@ -189,7 +189,7 @@ def main():
                     
                     #print(f"mean time: {sum(steptime)*1000/20}")
                     
-                if (event.key == K_RIGHT):
+                if (event.key == pg.K_RIGHT):
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
@@ -213,7 +213,7 @@ def main():
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)                
                      
-                if (event.key == K_LEFT):
+                if (event.key == pg.K_LEFT):
                     for astep in linspace(0,1,20):
                         screen.fill(WHITE)
                         for hex_id in arctic.matrix:
@@ -237,7 +237,7 @@ def main():
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)
 
-                if (event.key == K_DOWN):
+                if (event.key == pg.K_DOWN):
                     another_bear.set_destination()
                 
                     for astep in linspace(0,1,20):
@@ -261,7 +261,7 @@ def main():
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)
                     
-                if (event.key == K_ESCAPE):
+                if (event.key == pg.K_ESCAPE):
                     print(sys.getsizeof(draw_api.get_h_lookup))
         
         pygame.display.update()
