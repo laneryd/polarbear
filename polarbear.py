@@ -69,7 +69,7 @@ class Bear:
         self.direction   = direction
         self.destination = geometry.adjacent(self.position,self.direction)
         
-        self.trail = [geometry.adjacent(self.position,self.direction+3)]
+        self.trail = [position]
         for k in range(TRAILLENGTH-1):
             self.trail.append(geometry.adjacent(self.trail[k],self.direction+3))
         
@@ -79,10 +79,10 @@ class Bear:
         draw_api.highlight_hexagon(self.position,self.color,off=(0,astep),rot=rot)
         
     def move(self):
-        self.trail.insert(0,self.position)
-        self.trail.pop()
         self.position    = geometry.adjacent(self.position,self.direction)
         self.destination = geometry.adjacent(self.position,self.direction)
+        self.trail.insert(0,self.position)
+        self.trail.pop()
         
     def draw_movement(self,draw_api,astep=0,off=(0,0),rot=0):
         (ia,ja) = self.position
@@ -201,8 +201,7 @@ def main():
         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
     
     player_bear.draw(draw_api)
-    another_bear.draw(draw_api)
-    
+    another_bear.draw(draw_api)    
     
     while True:
         for event in pygame.event.get():
@@ -254,7 +253,6 @@ def main():
                     
                     screen.fill(WHITE)
                                         
-                    #ice_color = arctic.turn_right(ice_color)
                     another_bear.turn_left()
                     another_bear.rotate_right()
                     another_bear.move()
