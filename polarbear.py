@@ -5,7 +5,7 @@ import random
 from pygame.locals import *
 from math import cos, sin, sqrt, pi
 from numpy import arange, linspace
-import geometry
+import geometry, bear
 
 os.environ['SDL_VIDEO_WINDOW_POS'] = "3000,200"
 
@@ -13,7 +13,6 @@ WINDOWSIZE = (500,400)
 FPS = 40
 
 HEXSIDE       = 50
-TRAILLENGTH   = 3
 WHITE         = (255,255,255)
 HEXEDGECOLOR  = (127,127,127)
 BLUE          = (63, 63, 255)
@@ -63,58 +62,7 @@ class DrawAPI:
             
         pygame.draw.polygon(self.display,color,h)
 
-class Bear:
-    def __init__(self,position,direction,color):
-        self.position    = position
-        self.direction   = direction
-        self.destination = geometry.adjacent(self.position,self.direction)
-        
-        self.trail = [position]
-        for k in range(TRAILLENGTH-1):
-            self.trail.append(geometry.adjacent(self.trail[k],self.direction+3))
-        
-        self.color = color
-        
-    def draw(self,draw_api,astep=0,rot=0):
-        draw_api.highlight_hexagon(self.position,self.color,off=(0,astep),rot=rot)
-        
-    def move(self):
-        self.position    = geometry.adjacent(self.position,self.direction)
-        self.destination = geometry.adjacent(self.position,self.direction)
-        self.trail.insert(0,self.position)
-        self.trail.pop()
-        
-    def draw_movement(self,draw_api,astep=0,off=(0,0),rot=0):
-        (ia,ja) = self.position
-        (ib,jb) = self.destination
-        (io,ij) = off
-        offsum   = (io+(ib-ia)*astep,ij+(jb-ja)*astep)
-        
-        draw_api.highlight_hexagon(self.position,self.color,off=offsum,rot=rot)
-        
-    def turn_left(self):
-        self.direction = (self.direction + 1) % 6
-        
-    def turn_right(self):
-        self.direction = (self.direction - 1) % 6
-        
-    def rotate_left(self):
-        self.position = geometry.rotate_left(self.position)
-        for k in range(TRAILLENGTH):
-            self.trail[k] = geometry.rotate_left(self.trail[k])
-        
-    def rotate_right(self):
-        self.position = geometry.rotate_right(self.position)
-        for k in range(TRAILLENGTH):
-            self.trail[k] = geometry.rotate_right(self.trail[k])
-        
-    def shift_forward(self):
-        self.position = geometry.adjacent(self.position,3)
-        for k in range(TRAILLENGTH):
-            self.trail[k] = geometry.adjacent(self.trail[k],3)
-        
-    def set_destination(self):
-        self.destination = geometry.adjacent(self.position,self.direction)
+
 
 def add_perspective(p):
     (x,y) = p
@@ -189,8 +137,8 @@ def main():
     
     pure_ice_color = ice_color_array(arctic.size)
     
-    player_bear = Bear((0,0),0,BLUE)
-    another_bear = Bear((1,0),0,RED)
+    player_bear = bear.Bear((0,0),0,BLUE)
+    another_bear = bear.Bear((1,0),0,RED)
 
     ice_color = add_trail(arctic,pure_ice_color,another_bear)
 
