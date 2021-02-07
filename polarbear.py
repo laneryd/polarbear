@@ -73,7 +73,7 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),off=(0,-astep))
                         player_bear.draw(draw_api)
-                        another_bear.draw_movement(draw_api,off=(0,-astep),astep=astep)
+                        another_bear.draw(draw_api,off=(0,-astep),astep=astep)
                         #after = time.time()
                         #steptime.append(after-before)
                         pygame.display.update()
@@ -102,7 +102,7 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),rot=astep)
                         player_bear.draw(draw_api)
-                        another_bear.draw_movement(draw_api,rot=astep,astep=astep)
+                        another_bear.draw(draw_api,rot=astep,astep=astep)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
@@ -126,7 +126,7 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),rot=-astep)
                         player_bear.draw(draw_api)
-                        another_bear.draw_movement(draw_api,rot=-astep,astep=astep)
+                        another_bear.draw(draw_api,rot=-astep,astep=astep)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     
@@ -152,7 +152,7 @@ def main():
                         for hex_id in arctic.matrix:
                             draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                         player_bear.draw(draw_api)
-                        another_bear.draw_movement(draw_api,astep=astep)
+                        another_bear.draw(draw_api,astep=astep)
                         pygame.display.update()
                         fpsClock.tick(FPS)
                     

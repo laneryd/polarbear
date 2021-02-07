@@ -14,20 +14,17 @@ class Bear:
         
         self.color = color
         
-    def draw(self,draw_api,astep=0,rot=0):
-        draw_api.highlight_hexagon(self.position,self.color,off=(0,astep),rot=rot)
-        
     def move(self):
         self.position    = geometry.adjacent(self.position,self.direction)
         self.destination = geometry.adjacent(self.position,self.direction)
         self.trail.insert(0,self.position)
         self.trail.pop()
         
-    def draw_movement(self,draw_api,astep=0,off=(0,0),rot=0):
+    def draw(self,draw_api,astep=0,off=(0,0),rot=0):
         (ia,ja) = self.position
         (ib,jb) = self.destination
-        (io,ij) = off
-        offsum   = (io+(ib-ia)*astep,ij+(jb-ja)*astep)
+        (io,jo) = off
+        offsum   = (io+(ib-ia)*astep,jo+(jb-ja)*astep)
         
         draw_api.highlight_hexagon(self.position,self.color,off=offsum,rot=rot)
         
