@@ -13,10 +13,12 @@ WINDOWSIZE = (500,400)
 FPS = 40
 
 HEXSIDE       = 50
+TRAILLENGTH   = 3
 WHITE         = (255,255,255)
 HEXEDGECOLOR  = (127,127,127)
 BLUE          = (63, 63, 255)
-RED          = (255, 0, 63)
+RED           = (255, 0, 63)
+LIGHTRED      = (255,159,191)
 SQRT3 = sqrt(3)
 
 class DrawAPI:
@@ -65,15 +67,22 @@ class Bear:
     def __init__(self,position,direction,color):
         self.position    = position
         self.direction   = direction
-        self.destination = geometry.new_position(self.position,self.direction)
+        self.destination = geometry.adjacent(self.position,self.direction)
+        
+        self.trail = [geometry.adjacent(self.position,self.direction+3)]
+        for k in range(TRAILLENGTH-1):
+            self.trail.append(geometry.adjacent(self.trail[k],self.direction+3))
+        
         self.color = color
         
     def draw(self,draw_api,astep=0,rot=0):
         draw_api.highlight_hexagon(self.position,self.color,off=(0,astep),rot=rot)
         
     def move(self):
-        self.position    = geometry.new_position(self.position,self.direction)
-        self.destination = geometry.new_position(self.position,self.direction)
+        self.trail.insert(0,self.position)
+        self.trail.pop()
+        self.position    = geometry.adjacent(self.position,self.direction)
+        self.destination = geometry.adjacent(self.position,self.direction)
         
     def draw_movement(self,draw_api,astep=0,off=(0,0),rot=0):
         (ia,ja) = self.position
@@ -91,15 +100,21 @@ class Bear:
         
     def rotate_left(self):
         self.position = geometry.rotate_left(self.position)
+        for k in range(TRAILLENGTH):
+            self.trail[k] = geometry.rotate_left(self.trail[k])
         
     def rotate_right(self):
         self.position = geometry.rotate_right(self.position)
+        for k in range(TRAILLENGTH):
+            self.trail[k] = geometry.rotate_right(self.trail[k])
         
     def shift_forward(self):
-        self.position = geometry.new_position(self.position,3)
+        self.position = geometry.adjacent(self.position,3)
+        for k in range(TRAILLENGTH):
+            self.trail[k] = geometry.adjacent(self.trail[k],3)
         
     def set_destination(self):
-        self.destination = geometry.new_position(self.position,self.direction)
+        self.destination = geometry.adjacent(self.position,self.direction)
 
 def add_perspective(p):
     (x,y) = p
@@ -144,6 +159,13 @@ def ice_color_array(n):
     for i in range(n):
         l.append(random_ice_color())
     return l
+
+def add_trail(arctic,ia,bear):
+    ja = list(ia)
+    for (k,hex_id) in enumerate(bear.trail):
+        ja[arctic.center[hex_id]] = LIGHTRED
+    
+    return ja
     
 def get_hex_center(hexagon_id):
     (i,j) = hexagon_id
@@ -164,20 +186,23 @@ def main():
     hex_depth = 20
     
     arctic = geometry.Arctic(hex_depth)
+    
+    pure_ice_color = ice_color_array(arctic.size)
+    
+    player_bear = Bear((0,0),0,BLUE)
+    another_bear = Bear((1,0),0,RED)
 
-    ice_color = ice_color_array(arctic.size)
+    ice_color = add_trail(arctic,pure_ice_color,another_bear)
 
     draw_api = DrawAPI(screen)
     fpsClock = pygame.time.Clock()
             
     for hex_id in arctic.matrix:
         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
-
-    player_bear = Bear((0,0),0,BLUE)
-    another_bear = Bear((1,0),0,RED) 
     
     player_bear.draw(draw_api)
     another_bear.draw(draw_api)
+    
     
     while True:
         for event in pygame.event.get():
@@ -202,7 +227,9 @@ def main():
                     
                     screen.fill(WHITE)
                     
-                    ice_color = arctic.move_forward(ice_color,ice_color_array(2*arctic.depth+1))
+                    pure_ice_color = arctic.move_forward(pure_ice_color,ice_color_array(2*arctic.depth+1))
+                                        
+                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
                     
                     another_bear.shift_forward()
                     
@@ -227,15 +254,17 @@ def main():
                     
                     screen.fill(WHITE)
                                         
-                    ice_color = arctic.turn_right(ice_color)
+                    #ice_color = arctic.turn_right(ice_color)
                     another_bear.turn_left()
                     another_bear.rotate_right()
+                    another_bear.move()
+                    pure_ice_color = arctic.turn_right(pure_ice_color)
+                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
 
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                             
                     player_bear.draw(draw_api)
-                    another_bear.move()
                     another_bear.draw(draw_api)                
                      
                 if (event.key == K_LEFT):
@@ -249,16 +278,17 @@ def main():
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
-                    
-                    ice_color = arctic.turn_left(ice_color)
+
                     another_bear.turn_right()
                     another_bear.rotate_left()
+                    another_bear.move()
+                    pure_ice_color = arctic.turn_left(pure_ice_color)
+                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
                     
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                                                 
                     player_bear.draw(draw_api)
-                    another_bear.move()
                     another_bear.draw(draw_api)
 
                 if (event.key == K_DOWN):
@@ -274,12 +304,15 @@ def main():
                         fpsClock.tick(FPS)
                     
                     screen.fill(WHITE)
+                    
+                    another_bear.move()                    
+                                                            
+                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
                                         
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
                                                 
                     player_bear.draw(draw_api)
-                    another_bear.move()
                     another_bear.draw(draw_api)
                     
                 if (event.key == K_ESCAPE):
