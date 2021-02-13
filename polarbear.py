@@ -34,13 +34,13 @@ def add_trail(arctic,ia,bear):
     
     return ja
 
-def animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock):
+def animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,cr=0,co=0):
     for astep in linspace(0,1,20):
         draw_api.clear()
         for hex_id in arctic.matrix:
-            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),off=(0,co*astep),rot=cr*astep)
         player_bear.draw(draw_api)
-        another_bear.draw(draw_api,astep=astep)
+        another_bear.draw(draw_api,off=(0,co*astep),rot=cr*astep,astep=astep)
         pygame.display.update()
         fpsClock.tick(FPS)
     
@@ -78,42 +78,27 @@ def main():
                 
             if event.type == pg.KEYDOWN:
                 if (event.key == pg.K_UP):
-                    for astep in linspace(0,1,20):
-                        draw_api.clear()
-
-                        for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),off=(0,-astep))
-                        player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,off=(0,-astep),astep=astep)
-                        pygame.display.update()
-                        fpsClock.tick(FPS)
-                    
-                    draw_api.clear()
+                    co = -1
+                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,co=co)
                     
                     pure_ice_color = arctic.move_forward(pure_ice_color,ice_color_array(2*arctic.depth+1))
                                         
                     ice_color = add_trail(arctic,pure_ice_color,another_bear)
                     
-                    another_bear.shift_forward()
+                    #another_bear.shift_forward()
                     
                     for hex_id in arctic.matrix:
                         draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+                    
+                    another_bear.shift_forward()
                     
                     player_bear.draw(draw_api)
                     another_bear.move()
                     another_bear.draw(draw_api)
                     
                 if (event.key == pg.K_RIGHT):
-                    for astep in linspace(0,1,20):
-                        draw_api.clear()
-                        for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),rot=astep)
-                        player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,rot=astep,astep=astep)
-                        pygame.display.update()
-                        fpsClock.tick(FPS)
-                    
-                    draw_api.clear()
+                    cr = 1
+                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,cr=cr)
                                         
                     another_bear.turn_left()
                     another_bear.rotate_right()
@@ -128,16 +113,8 @@ def main():
                     another_bear.draw(draw_api)                
                      
                 if (event.key == pg.K_LEFT):
-                    for astep in linspace(0,1,20):
-                        draw_api.clear()
-                        for hex_id in arctic.matrix:
-                            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),rot=-astep)
-                        player_bear.draw(draw_api)
-                        another_bear.draw(draw_api,rot=-astep,astep=astep)
-                        pygame.display.update()
-                        fpsClock.tick(FPS)
-                    
-                    draw_api.clear()
+                    cr = -1
+                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,cr=cr)
 
                     another_bear.turn_right()
                     another_bear.rotate_left()
@@ -153,16 +130,6 @@ def main():
 
                 if (event.key == pg.K_DOWN):
                     animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock)
-                    # for astep in linspace(0,1,20):
-                        # draw_api.clear()
-                        # for hex_id in arctic.matrix:
-                            # draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
-                        # player_bear.draw(draw_api)
-                        # another_bear.draw(draw_api,astep=astep)
-                        # pygame.display.update()
-                        # fpsClock.tick(FPS)
-                    
-                    # draw_api.clear()
                     
                     another_bear.move()                    
                                                             
