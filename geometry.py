@@ -1,3 +1,5 @@
+import random
+
 def rotate_left(hex_id):
     (i,j) = hex_id
     return (i+j,-i)
@@ -10,6 +12,18 @@ def adjacent(hex_id,direction):
     (i,j) = hex_id
     surrounding = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),4:(i+1,j-1),5:(i+1,j)}
     return surrounding.get(direction)
+    
+def random_ice_color():    
+    blue = random.randrange(16)
+    gray = blue*2
+    
+    return (255-gray,255-gray,255-blue)
+    
+def ice_color_array(n):
+    l = []
+    for i in range(n):
+        l.append(random_ice_color())
+    return l
 
 class Arctic:
     def __init__(self, depth):
@@ -20,6 +34,7 @@ class Arctic:
         self.right   = {}
         self.left    = {}
         self.forward = {}
+        self.pure    = {}
         
         count = 0
 
