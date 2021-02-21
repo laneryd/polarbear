@@ -13,6 +13,7 @@ FPS = 40
 BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
 LIGHTRED      = (255,159,191)
+INVLIGHTRED   = (0,-96,-64)
 
 def add_trail(arctic,ia,bear):
     ja = list(ia)
@@ -52,7 +53,7 @@ def main():
     arctic = geometry.Arctic(hex_depth)
     
     player_bear = bear.Bear((0,0),0,BLUE,BLUE)
-    another_bear = bear.Bear((1,3),2,RED,LIGHTRED)
+    another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED)
     another_bear.put_trail(arctic)
 
     fpsClock = pygame.time.Clock()

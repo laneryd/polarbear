@@ -1,6 +1,6 @@
 import geometry
 
-TRAILLENGTH   = 3
+TRAILLENGTH   = 8
 
 class Bear:
     def __init__(self,position,direction,color,trailcolor):
@@ -52,5 +52,7 @@ class Bear:
             
     def put_trail(self,arctic):
         for (k,hex_id) in enumerate(self.trail):
-            arctic.set_color(hex_id,self.trailcolor)
+            (r,g,b) = self.trailcolor
+            fadingcolor = (r/(k+1),g/(k+1),b/(k+1))
+            arctic.add_color(hex_id,fadingcolor)
         
