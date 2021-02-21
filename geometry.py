@@ -34,7 +34,6 @@ class Arctic:
         self.right   = {}
         self.left    = {}
         self.forward = {}
-        self.pure    = {}
         
         count = 0
 
@@ -55,20 +54,38 @@ class Arctic:
                 self.right[(i+j,-i)]  = count
                 self.forward[(i,j-1)] = count
                 count = count + 1
+                
+        self.pure = ice_color_array(self.size)
+        self.ice  = list(self.pure)
+        
+    def remain(self):
+        self.ice  = list(self.pure)
+    
+    def turn_left(self):
+        self.pure = self.turn_array_left(self.pure)
+        self.ice  = list(self.pure)
+        
+    def turn_right(self):
+        self.pure = self.turn_array_right(self.pure)
+        self.ice  = list(self.pure)
+        
+    def move_forward(self):
+        self.pure = self.move_array_forward(self.pure,ice_color_array(2*self.depth+1))
+        self.ice  = list(self.pure)
 
-    def turn_left(self,p):
+    def turn_array_left(self,p):
         q = list(p)
         for hex_id in self.matrix:
             q[self.left[hex_id]] = p[self.center[hex_id]]
         return q
         
-    def turn_right(self,p):
+    def turn_array_right(self,p):
         q = list(p)
         for hex_id in self.matrix:
             q[self.right[hex_id]] = p[self.center[hex_id]]
         return q
         
-    def move_forward(self,p,elem):
+    def move_array_forward(self,p,elem):
         q = list(p)
         for hex_id in self.matrix:
             (i,j) = hex_id
@@ -78,5 +95,11 @@ class Arctic:
                 q[self.center[hex_id]] = p[self.forward[hex_id]]
         return q
 
-    def get(self,hex_id,p):
-        return p[self.center[hex_id]]
+    # def get(self,hex_id,p):
+        # return p[self.center[hex_id]]
+        
+    def color(self,hex_id):
+        return self.ice[self.center[hex_id]]
+        
+    def set_color(self,hex_id,color):
+        self.ice[self.center[hex_id]] = color 

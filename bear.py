@@ -3,7 +3,7 @@ import geometry
 TRAILLENGTH   = 3
 
 class Bear:
-    def __init__(self,position,direction,color):
+    def __init__(self,position,direction,color,trailcolor):
         self.position    = position
         self.direction   = direction
         self.destination = geometry.adjacent(self.position,self.direction)
@@ -13,6 +13,7 @@ class Bear:
             self.trail.append(geometry.adjacent(self.trail[k],self.direction+3))
         
         self.color = color
+        self.trailcolor = trailcolor
         
     def move(self):
         self.position    = geometry.adjacent(self.position,self.direction)
@@ -48,3 +49,8 @@ class Bear:
         self.position = geometry.adjacent(self.position,3)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.adjacent(self.trail[k],3)
+            
+    def put_trail(self,arctic):
+        for (k,hex_id) in enumerate(self.trail):
+            arctic.set_color(hex_id,self.trailcolor)
+        

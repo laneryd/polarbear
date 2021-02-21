@@ -6,7 +6,7 @@ import pygame.locals as pg
 from numpy import arange, linspace
 import geometry, bear
 
-os.environ['SDL_VIDEO_WINDOW_POS'] = "3000,200"
+#os.environ['SDL_VIDEO_WINDOW_POS'] = "3000,200"
 
 FPS = 40
 
@@ -21,11 +21,11 @@ def add_trail(arctic,ia,bear):
     
     return ja
 
-def animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,cr=0,co=0):
+def animate(draw_api,arctic,player_bear,another_bear,fpsClock,cr=0,co=0):
     for astep in linspace(0,1,20):
         draw_api.clear()
         for hex_id in arctic.matrix:
-            draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color),off=(0,co*astep),rot=cr*astep)
+            draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id),off=(0,co*astep),rot=cr*astep)
         player_bear.draw(draw_api)
         another_bear.draw(draw_api,off=(0,co*astep),rot=cr*astep,astep=astep)
         pygame.display.update()
@@ -37,7 +37,7 @@ def refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear):
     ice_color = add_trail(arctic,pure_ice_color,another_bear)
 
     for hex_id in arctic.matrix:
-        draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
 
     player_bear.draw(draw_api)
     another_bear.draw(draw_api)
@@ -51,17 +51,14 @@ def main():
     
     arctic = geometry.Arctic(hex_depth)
     
-    pure_ice_color = geometry.ice_color_array(arctic.size)
-    
-    player_bear = bear.Bear((0,0),0,BLUE)
-    another_bear = bear.Bear((1,3),2,RED)
-
-    ice_color = add_trail(arctic,pure_ice_color,another_bear)
+    player_bear = bear.Bear((0,0),0,BLUE,BLUE)
+    another_bear = bear.Bear((1,3),2,RED,LIGHTRED)
+    another_bear.put_trail(arctic)
 
     fpsClock = pygame.time.Clock()
             
     for hex_id in arctic.matrix:
-        draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
     
     player_bear.draw(draw_api)
     another_bear.draw(draw_api)    
@@ -75,74 +72,72 @@ def main():
             if event.type == pg.KEYDOWN:
                 if (event.key == pg.K_UP):
                     co = -1
-                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,co=co)
+                    animate(draw_api,arctic,player_bear,another_bear,fpsClock,co=co)
+                    
+                    arctic.move_forward()
                     
                     another_bear.shift_forward()
                     another_bear.move()
-                    
-                    pure_ice_color = arctic.move_forward(pure_ice_color,geometry.ice_color_array(2*arctic.depth+1))
-                    
+                    another_bear.put_trail(arctic)
+
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
-                                        
-                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
                     
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+                        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
                     
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)
                     
                 if (event.key == pg.K_RIGHT):
                     cr = 1
-                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,cr=cr)
+                    animate(draw_api,arctic,player_bear,another_bear,fpsClock,cr=cr)
                                         
+                    arctic.turn_right()
+                    
                     another_bear.turn_left()
                     another_bear.rotate_right()
                     another_bear.move()
-                    
-                    pure_ice_color = arctic.turn_right(pure_ice_color)
+                    another_bear.put_trail(arctic)
                     
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
-                    
-                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
 
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+                        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
                             
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)
                      
                 if (event.key == pg.K_LEFT):
                     cr = -1
-                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock,cr=cr)
+                    animate(draw_api,arctic,player_bear,another_bear,fpsClock,cr=cr)
 
+                    arctic.turn_left()
+                    
                     another_bear.turn_right()
                     another_bear.rotate_left()
                     another_bear.move()
-                    
-                    pure_ice_color = arctic.turn_left(pure_ice_color)
-                    
+                    another_bear.put_trail(arctic)
+
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
                     
-                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
-                    
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+                        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
                                                 
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)
 
                 if (event.key == pg.K_DOWN):
-                    animate(draw_api,arctic,player_bear,another_bear,ice_color,fpsClock)
+                    animate(draw_api,arctic,player_bear,another_bear,fpsClock)
                     
-                    another_bear.move()                    
+                    arctic.remain()
+                    
+                    another_bear.move()
+                    another_bear.put_trail(arctic)
                     
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
-                    
-                    ice_color = add_trail(arctic,pure_ice_color,another_bear)
                                         
                     for hex_id in arctic.matrix:
-                        draw_api.draw_hexagon(hex_id,color=arctic.get(hex_id,ice_color))
+                        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
                                                 
                     player_bear.draw(draw_api)
                     another_bear.draw(draw_api)
