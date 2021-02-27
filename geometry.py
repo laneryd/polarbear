@@ -105,6 +105,7 @@ class Arctic:
         self.ice[self.center[hex_id]] = color 
         
     def add_color(self,hex_id,color):
-        (r0,g0,b0) = self.ice[self.center[hex_id]]
-        (r1,g1,b1) = color
-        self.ice[self.center[hex_id]] = (r0+r1,g0+g1,b0+b1) 
+        if hex_id in self.center:
+            (r0,g0,b0) = self.ice[self.center[hex_id]]
+            (r1,g1,b1) = color
+            self.ice[self.center[hex_id]] = (r0+r1,g0+g1,b0+b1) 

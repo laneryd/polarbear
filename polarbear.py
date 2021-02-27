@@ -10,7 +10,7 @@ import geometry, bear
 
 FPS = 40
 
-HEXDEPTH = 20
+HEXDEPTH = 4
 
 BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
