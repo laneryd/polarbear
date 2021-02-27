@@ -55,6 +55,7 @@ def main():
     player_bear = bear.Bear((0,0),0,BLUE,BLUE)
     another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED)
     another_bear.put_trail(arctic)
+    list_of_bears = [another_bear]
 
     fpsClock = pygame.time.Clock()
             
@@ -76,10 +77,14 @@ def main():
                     animate(draw_api,arctic,player_bear,another_bear,fpsClock,co=co)
                     
                     arctic.move_forward()
-                    
-                    another_bear.shift_forward()
-                    another_bear.move()
-                    another_bear.put_trail(arctic)
+
+                    for b in list_of_bears:
+                        b.shift_forward()
+                        b.move()
+                        b.put_trail(arctic)                   
+                    # another_bear.shift_forward()
+                    # another_bear.move()
+                    # another_bear.put_trail(arctic)
 
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
                     
@@ -94,11 +99,16 @@ def main():
                     animate(draw_api,arctic,player_bear,another_bear,fpsClock,cr=cr)
                                         
                     arctic.turn_right()
-                    
-                    another_bear.turn_left()
-                    another_bear.rotate_right()
-                    another_bear.move()
-                    another_bear.put_trail(arctic)
+
+                    for b in list_of_bears:
+                        b.turn_left()
+                        b.rotate_right()
+                        b.move()
+                        b.put_trail(arctic)
+                    # another_bear.turn_left()
+                    # another_bear.rotate_right()
+                    # another_bear.move()
+                    # another_bear.put_trail(arctic)
                     
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
 
@@ -114,10 +124,15 @@ def main():
 
                     arctic.turn_left()
                     
-                    another_bear.turn_right()
-                    another_bear.rotate_left()
-                    another_bear.move()
-                    another_bear.put_trail(arctic)
+                    for b in list_of_bears:
+                        b.turn_right()
+                        b.rotate_left()
+                        b.move()
+                        b.put_trail(arctic)
+                    # another_bear.turn_right()
+                    # another_bear.rotate_left()
+                    # another_bear.move()
+                    # another_bear.put_trail(arctic)
 
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
                     
@@ -132,8 +147,9 @@ def main():
                     
                     arctic.remain()
                     
-                    another_bear.move()
-                    another_bear.put_trail(arctic)
+                    for b in list_of_bears:
+                        b.move()
+                        b.put_trail(arctic)
                     
                     # refresh(draw_api,arctic,pure_ice_color,player_bear,another_bear)
                                         
