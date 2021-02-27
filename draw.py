@@ -2,6 +2,7 @@ import pygame
 from math import cos, sin, sqrt, pi
 
 HEXSIDE       = 50
+HEXSIZEFACTOR = 0.95
 WINDOWSIZE    = (500,400)
 WHITE         = (255,255,255)
 HEXEDGECOLOR  = (127,127,127)
@@ -17,16 +18,8 @@ class DrawAPI:
         if (hex_id,off,rot) not in self.get_h_lookup:
             (i,j) = hex_id
             j = j + off[1]
-            center = get_hex_center((i,j))
-            h = []
-            for k in range(6):
-                corner = get_hex_corner(center,0.95,k)
-                corner = add_rotation(corner,rot)
-                corner = add_perspective(corner)
-                corner = window_coordinates(corner)
-                h.append(corner)
-            if not any(check_if_point_in_window(p) for p in h):
-                h = []
+
+            h = get_hexagon(i,j,rot)
             self.get_h_lookup[(hex_id,off,rot)] = h
         
         h = self.get_h_lookup[(hex_id,off,rot)]
@@ -39,19 +32,27 @@ class DrawAPI:
         (i,j) = hex_id
         i = i + off[0]
         j = j + off[1]
-        center = get_hex_center((i,j))
-        h = []
-        for k in range(6):
-            corner = get_hex_corner(center,0.95,k)
-            corner = add_rotation(corner,rot)
-            corner = add_perspective(corner)
-            corner = window_coordinates(corner)
-            h.append(corner)
-            
-        pygame.draw.polygon(self.display,color,h)
-                
+        
+        h = get_hexagon(i,j,rot)
+        
+        if h:    
+            pygame.draw.polygon(self.display,color,h)
+
     def clear(self):
         self.display.fill(WHITE)
+
+def get_hexagon(i,j,rot):
+    center = get_hex_center((i,j))
+    h = []
+    for k in range(6):
+        corner = get_hex_corner(center,HEXSIZEFACTOR,k)
+        corner = add_rotation(corner,rot)
+        corner = add_perspective(corner)
+        corner = window_coordinates(corner)
+        h.append(corner)
+    if not any(check_if_point_in_window(p) for p in h):
+        h = []
+    return h
         
 def get_hex_corner(center, size, i):
     (cx,cy) = center

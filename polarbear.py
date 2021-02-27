@@ -10,6 +10,8 @@ import geometry, bear
 
 FPS = 40
 
+HEXDEPTH = 20
+
 BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
 LIGHTRED      = (255,159,191)
@@ -47,10 +49,8 @@ def main():
     #random.seed(0)
     
     draw_api = draw.init()
-
-    hex_depth = 20
     
-    arctic = geometry.Arctic(hex_depth)
+    arctic = geometry.Arctic(HEXDEPTH)
     
     player_bear = bear.Bear((0,0),0,BLUE,BLUE)
     another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED)
