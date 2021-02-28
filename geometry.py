@@ -97,7 +97,10 @@ class Arctic:
 
     # def get(self,hex_id,p):
         # return p[self.center[hex_id]]
-        
+    
+    def contains(self, hex_id):
+        return hex_id in self.center
+    
     def color(self,hex_id):
         return self.ice[self.center[hex_id]]
         
@@ -105,7 +108,8 @@ class Arctic:
         self.ice[self.center[hex_id]] = color 
         
     def add_color(self,hex_id,color):
-        if hex_id in self.center:
+        if self.contains(hex_id):
+        # if hex_id in self.center:
             (r0,g0,b0) = self.ice[self.center[hex_id]]
             (r1,g1,b1) = color
             self.ice[self.center[hex_id]] = (r0+r1,g0+g1,b0+b1) 
