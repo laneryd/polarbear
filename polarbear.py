@@ -44,6 +44,15 @@ def redraw(draw_api,arctic,player_bear,list_of_bears):
     player_bear.draw(draw_api)
     for b in list_of_bears:
         b.draw(draw_api)
+        
+def move_bears(arctic,list_of_bears):
+    for b in list_of_bears:
+        b.move()
+        b.put_trail(arctic)
+        
+        if not arctic.contains(b.position):
+            list_of_bears.remove(b)
+            print('Bear outside arctic!')
 
 def main():
     #random.seed(0)
@@ -58,12 +67,8 @@ def main():
     list_of_bears = [another_bear]
 
     fpsClock = pygame.time.Clock()
-            
-    for hex_id in arctic.matrix:
-        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
     
-    player_bear.draw(draw_api)
-    another_bear.draw(draw_api)    
+    redraw(draw_api,arctic,player_bear,list_of_bears)
     
     while True:
         for event in pygame.event.get():
@@ -80,8 +85,8 @@ def main():
 
                     for b in list_of_bears:
                         b.shift_forward()
-                        b.move()
-                        b.put_trail(arctic)
+                        
+                    move_bears(arctic,list_of_bears)
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
                                        
@@ -94,8 +99,8 @@ def main():
                     for b in list_of_bears:
                         b.turn_left()
                         b.rotate_right()
-                        b.move()
-                        b.put_trail(arctic)
+                        
+                    move_bears(arctic,list_of_bears)
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
 
@@ -115,8 +120,8 @@ def main():
                     for b in list_of_bears:
                         b.turn_right()
                         b.rotate_left()
-                        b.move()
-                        b.put_trail(arctic)
+                        
+                    move_bears(arctic,list_of_bears)
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
 
@@ -124,10 +129,8 @@ def main():
                     animate(draw_api,arctic,player_bear,list_of_bears,fpsClock)
                     
                     arctic.remain()
-                    
-                    for b in list_of_bears:
-                        b.move()
-                        b.put_trail(arctic)
+
+                    move_bears(arctic,list_of_bears)
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
                     
