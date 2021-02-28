@@ -10,7 +10,7 @@ class Bear:
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):
-            self.trail.append(geometry.adjacent(self.trail[k],self.direction+3))
+            self.trail.append(geometry.adjacent(self.trail[k],(self.direction+3) % 6))
         
         self.color = color
         self.trailcolor = trailcolor

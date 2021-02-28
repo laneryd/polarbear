@@ -10,7 +10,7 @@ import geometry, bear
 
 FPS = 40
 
-HEXDEPTH = 4
+HEXDEPTH = 10
 
 BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
@@ -64,7 +64,10 @@ def main():
     player_bear = bear.Bear((0,0),0,BLUE,BLUE)
     another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED)
     another_bear.put_trail(arctic)
-    list_of_bears = [another_bear]
+    yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED)
+    yet_another_bear.put_trail(arctic)
+    list_of_bears = [another_bear, yet_another_bear]
+    #list_of_bears = [another_bear]
 
     fpsClock = pygame.time.Clock()
     
