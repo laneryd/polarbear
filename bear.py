@@ -1,8 +1,11 @@
 import geometry
+import itertools
 
 TRAILLENGTH   = 8
 
 class Bear:
+    id_iter = itertools.count()
+
     def __init__(self,position,direction,color,trailcolor,sex):
         self.position    = position
         self.direction   = direction
@@ -12,9 +15,10 @@ class Bear:
         for k in range(TRAILLENGTH-1):
             self.trail.append(geometry.adjacent(self.trail[k],(self.direction+3) % 6))
         
-        self.color = color
+        self.color      = color
         self.trailcolor = trailcolor
-        self.sex = sex
+        self.sex        = sex
+        self.identity   = next(Bear.id_iter)
         
     def move(self):
         self.position    = geometry.adjacent(self.position,self.direction)
@@ -62,5 +66,5 @@ class Bear:
             sex = 'Male'
         else:
             sex = 'Female'
-        print(sex, 'polarbear at', self.position)
+        print('Polarbear', self.identity, 'is at', self.position)
         
