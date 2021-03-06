@@ -49,6 +49,7 @@ def move_bears(arctic,list_of_bears):
     for b in list_of_bears:
         b.move()
         b.put_trail(arctic)
+        #b.describe()
         
         if not arctic.contains(b.position):
             list_of_bears.remove(b)
@@ -61,11 +62,11 @@ def main():
     
     arctic = geometry.Arctic(HEXDEPTH)
     
-    player_bear = bear.Bear((0,0),0,BLUE,BLUE)
+    player_bear = bear.Bear((0,0),0,BLUE,BLUE,'M')
     
-    another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED)
+    another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED,'F')
     another_bear.put_trail(arctic)
-    yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED)
+    yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED,'F')
     yet_another_bear.put_trail(arctic)
     
     list_of_bears = [another_bear, yet_another_bear]
@@ -107,13 +108,6 @@ def main():
                     move_bears(arctic,list_of_bears)
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
-
-                    # for hex_id in arctic.matrix:
-                        # draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
-                            
-                    # player_bear.draw(draw_api)
-                    # for b in list_of_bears:
-                        # b.draw(draw_api)
                      
                 if (event.key == pg.K_LEFT):
                     cr = -1

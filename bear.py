@@ -3,7 +3,7 @@ import geometry
 TRAILLENGTH   = 8
 
 class Bear:
-    def __init__(self,position,direction,color,trailcolor):
+    def __init__(self,position,direction,color,trailcolor,sex):
         self.position    = position
         self.direction   = direction
         self.destination = geometry.adjacent(self.position,self.direction)
@@ -14,6 +14,7 @@ class Bear:
         
         self.color = color
         self.trailcolor = trailcolor
+        self.sex = sex
         
     def move(self):
         self.position    = geometry.adjacent(self.position,self.direction)
@@ -55,4 +56,11 @@ class Bear:
             (r,g,b) = self.trailcolor
             fadingcolor = (r/(k+1),g/(k+1),b/(k+1))
             arctic.add_color(hex_id,fadingcolor)
+            
+    def describe(self):
+        if self.sex == 'M':
+            sex = 'Male'
+        else:
+            sex = 'Female'
+        print(sex, 'polarbear at', self.position)
         
