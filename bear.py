@@ -61,8 +61,9 @@ class Bear:
             
     def put_trail(self,arctic):
         for (k,hex_id) in enumerate(self.trail):
-            (r,g,b) = self.trailcolor
-            fadingcolor = (r/(k+1),g/(k+1),b/(k+1))
+            #(r,g,b) = self.trailcolor
+            #fadingcolor = (r/(k+1),g/(k+1),b/(k+1))
+            fadingcolor = tuple([c*(TRAILLENGTH-k) for c in self.trailcolor])
             arctic.add_color(hex_id,fadingcolor)
             
     def describe(self):

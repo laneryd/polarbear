@@ -15,7 +15,7 @@ HEXDEPTH = 10
 BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
 LIGHTRED      = (255,159,191)
-INVLIGHTRED   = (0,-96,-64)
+INVLIGHTRED   = (0,-12,-8)
 
 # def add_trail(arctic,ia,bear):
     # ja = list(ia)
