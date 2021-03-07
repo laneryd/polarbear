@@ -23,7 +23,7 @@ class Bear:
         
     def move(self):
         if self.position != self.destination:
-            self.position    = geometry.adjacent(self.position,self.direction)
+            self.position    = self.destination
             self.destination = geometry.adjacent(self.position,self.direction)
         else:
             print("Bear", self.identity, "doesn't move.")
@@ -45,17 +45,20 @@ class Bear:
         self.direction = (self.direction - 1) % 6
         
     def rotate_left(self):
-        self.position = geometry.rotate_left(self.position)
+        self.position    = geometry.rotate_left(self.position)
+        self.destination = geometry.rotate_left(self.destination)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.rotate_left(self.trail[k])
         
     def rotate_right(self):
-        self.position = geometry.rotate_right(self.position)
+        self.position    = geometry.rotate_right(self.position)
+        self.destination = geometry.rotate_right(self.destination)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.rotate_right(self.trail[k])
         
     def shift_forward(self):
-        self.position = geometry.adjacent(self.position,3)
+        self.position    = geometry.adjacent(self.position,3)
+        self.destination = geometry.adjacent(self.destination,3)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.adjacent(self.trail[k],3)
             
