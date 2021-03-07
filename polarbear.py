@@ -17,12 +17,12 @@ RED           = (255, 0, 63)
 LIGHTRED      = (255,159,191)
 INVLIGHTRED   = (0,-96,-64)
 
-def add_trail(arctic,ia,bear):
-    ja = list(ia)
-    for (k,hex_id) in enumerate(bear.trail):
-        ja[arctic.center[hex_id]] = LIGHTRED
+# def add_trail(arctic,ia,bear):
+    # ja = list(ia)
+    # for (k,hex_id) in enumerate(bear.trail):
+        # ja[arctic.center[hex_id]] = LIGHTRED
     
-    return ja
+    # return ja
 
 def animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,cr=0,co=0):
     for astep in linspace(0,1,20):
@@ -39,7 +39,10 @@ def animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,cr=0,co=0):
     
 def redraw(draw_api,arctic,player_bear,list_of_bears):
     for hex_id in arctic.matrix:
-        draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
+        try:
+            draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
+        except ValueError:
+            print('Value Error', arctic.color(hex_id))
                                 
     player_bear.draw(draw_api)
     for b in list_of_bears:

@@ -109,6 +109,6 @@ class Arctic:
         
     def add_color(self,hex_id,color):
         if self.contains(hex_id):
-            (r0,g0,b0) = self.ice[self.center[hex_id]]
-            (r1,g1,b1) = color
-            self.ice[self.center[hex_id]] = (r0+r1,g0+g1,b0+b1) 
+            ice_color = self.ice[self.center[hex_id]]
+            new_color = tuple([max(0,sum(c)) for c in zip(ice_color,color)])
+            self.ice[self.center[hex_id]] = new_color

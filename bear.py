@@ -10,6 +10,7 @@ class Bear:
         self.position    = position
         self.direction   = direction
         self.destination = geometry.adjacent(self.position,self.direction)
+        self.destination = self.position
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):
@@ -21,8 +22,11 @@ class Bear:
         self.identity   = next(Bear.id_iter)
         
     def move(self):
-        self.position    = geometry.adjacent(self.position,self.direction)
-        self.destination = geometry.adjacent(self.position,self.direction)
+        if self.position != self.destination:
+            self.position    = geometry.adjacent(self.position,self.direction)
+            self.destination = geometry.adjacent(self.position,self.direction)
+        else:
+            print("Bear", self.identity, "doesn't move.")
         self.trail.insert(0,self.position)
         self.trail.pop()
         
