@@ -9,8 +9,7 @@ class Bear:
     def __init__(self,position,direction,color,trailcolor,sex):
         self.position    = position
         self.direction   = direction
-        self.destination = geometry.adjacent(self.position,self.direction)
-        self.destination = self.position
+        #self.destination = geometry.adjacent(self.position,self.direction)
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):
@@ -22,17 +21,25 @@ class Bear:
         self.identity   = next(Bear.id_iter)
         
     def move(self):
-        if self.position != self.destination:
-            self.position    = self.destination
-            self.destination = geometry.adjacent(self.position,self.direction)
-        else:
-            print("Bear", self.identity, "doesn't move.")
+        #if self.position != self.destination:
+        self.position = geometry.adjacent(self.position,self.direction)
+            #self.destination = geometry.adjacent(self.position,self.direction)
+        #else:
+        #    self.destination = geometry.adjacent(self.position,self.direction)
+            #print("Bear", self.identity, "doesn't move.")
+        #self.purpose()
         self.trail.insert(0,self.position)
         self.trail.pop()
-        
+    
+    def purpose(self):
+        #self.describe()
+        if self.position == self.destination:
+            self.destination = geometry.adjacent(self.position,self.direction)
+        #else:
+    
     def draw(self,draw_api,astep=0,off=(0,0),rot=0):
         (ia,ja) = self.position
-        (ib,jb) = self.destination
+        (ib,jb) = geometry.adjacent(self.position,self.direction) #self.destination
         (io,jo) = off
         offsum   = (io+(ib-ia)*astep,jo+(jb-ja)*astep)
         
@@ -46,19 +53,19 @@ class Bear:
         
     def rotate_left(self):
         self.position    = geometry.rotate_left(self.position)
-        self.destination = geometry.rotate_left(self.destination)
+        #self.destination = geometry.rotate_left(self.destination)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.rotate_left(self.trail[k])
         
     def rotate_right(self):
         self.position    = geometry.rotate_right(self.position)
-        self.destination = geometry.rotate_right(self.destination)
+        #self.destination = geometry.rotate_right(self.destination)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.rotate_right(self.trail[k])
         
     def shift_forward(self):
         self.position    = geometry.adjacent(self.position,3)
-        self.destination = geometry.adjacent(self.destination,3)
+        #self.destination = geometry.adjacent(self.destination,3)
         for k in range(TRAILLENGTH):
             self.trail[k] = geometry.adjacent(self.trail[k],3)
             
@@ -74,5 +81,5 @@ class Bear:
             sex = 'Male'
         else:
             sex = 'Female'
-        print('Polarbear', self.identity, 'is at', self.position)
+        print('Polarbear', self.identity, 'at', self.position, 'destined for', self.destination)
         
