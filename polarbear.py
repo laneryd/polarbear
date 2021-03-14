@@ -29,9 +29,9 @@ def animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,cr=0,co=0):
         draw_api.clear()
         for hex_id in arctic.matrix:
             draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id),off=(0,co*astep),rot=cr*astep)
-        player_bear.draw(draw_api)
         for b in list_of_bears:
             b.draw(draw_api,off=(0,co*astep),rot=cr*astep,astep=astep)
+        player_bear.draw(draw_api)
         pygame.display.update()
         fpsClock.tick(FPS)
     
@@ -43,10 +43,11 @@ def redraw(draw_api,arctic,player_bear,list_of_bears):
             draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
         except ValueError:
             print('Value Error', arctic.color(hex_id))
-                                
-    player_bear.draw(draw_api)
+    
     for b in list_of_bears:
         b.draw(draw_api)
+        
+    player_bear.draw(draw_api)
         
 def move_bears(arctic,list_of_bears):
     for b in list_of_bears:

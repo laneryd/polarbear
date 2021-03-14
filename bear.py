@@ -32,6 +32,7 @@ class Bear:
     def purpose(self):
         if self.exhaustion > 3:
             self.destination = self.position
+            self.turn_left()
             self.exhaustion -= 1
         else:
             self.destination = geometry.adjacent(self.position,self.direction)
