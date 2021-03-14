@@ -25,36 +25,32 @@ INVLIGHTBLUE  = (-12,-12,-0)
     
     # return ja
 
-def animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,cr=0,co=0):
+def animate(draw_api,arctic,list_of_bears,fpsClock,cr=0,co=0):
     for astep in linspace(0,1,20):
         draw_api.clear()
         for hex_id in arctic.matrix:
             draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id),off=(0,co*astep),rot=cr*astep)
-        for b in list_of_bears:
+        for b in reversed(list_of_bears):
             b.draw(draw_api,off=(0,co*astep),rot=cr*astep,astep=astep)
-        player_bear.draw(draw_api)
         pygame.display.update()
         fpsClock.tick(FPS)
     
     draw_api.clear()
     
-def redraw(draw_api,arctic,player_bear,list_of_bears):
+def redraw(draw_api,arctic,list_of_bears):
     for hex_id in arctic.matrix:
         try:
             draw_api.draw_hexagon(hex_id,color=arctic.color(hex_id))
         except ValueError:
             print('Value Error', arctic.color(hex_id))
     
-    for b in list_of_bears:
+    for b in reversed(list_of_bears):
         b.draw(draw_api)
-        
-    player_bear.draw(draw_api)
         
 def move_bears(arctic,list_of_bears):
     for b in list_of_bears:
         b.move()
         b.put_trail(arctic)
-        #b.describe()
         
         if not arctic.contains(b.position):
             list_of_bears.remove(b)
@@ -83,7 +79,7 @@ def main():
 
     fpsClock = pygame.time.Clock()
     
-    redraw(draw_api,arctic,player_bear,list_of_bears)
+    redraw(draw_api,arctic,list_of_bears)
     
     while True:
         for event in pygame.event.get():
@@ -94,7 +90,9 @@ def main():
             if event.type == pg.KEYDOWN:
                 if (event.key == pg.K_UP):
                     co = -1
-                    animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,co=co)
+                    list_of_bears[0].destination = (0,1)
+                    
+                    animate(draw_api,arctic,list_of_bears,fpsClock,co=co)
                     
                     arctic.move_forward()
 
@@ -103,45 +101,49 @@ def main():
                         
                     move_bears(arctic,list_of_bears[1:])
                     
-                    redraw(draw_api,arctic,player_bear,list_of_bears)
+                    redraw(draw_api,arctic,list_of_bears)
                                        
                 if (event.key == pg.K_RIGHT):
                     cr = 1
-                    animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,cr=cr)
+                    list_of_bears[0].destination = (0,0)
+                    animate(draw_api,arctic,list_of_bears,fpsClock,cr=cr)
                                         
                     arctic.turn_right()
 
-                    for b in list_of_bears:
+                    for b in list_of_bears[1:]:
                         b.turn_left()
                         b.rotate_right()
                         
                     move_bears(arctic,list_of_bears[1:])
                     
-                    redraw(draw_api,arctic,player_bear,list_of_bears)
+                    redraw(draw_api,arctic,list_of_bears)
                      
                 if (event.key == pg.K_LEFT):
                     cr = -1
-                    animate(draw_api,arctic,player_bear,list_of_bears,fpsClock,cr=cr)
+                    list_of_bears[0].destination = (0,0)
+                    
+                    animate(draw_api,arctic,list_of_bears,fpsClock,cr=cr)
 
                     arctic.turn_left()
                     
-                    for b in list_of_bears:
+                    for b in list_of_bears[1:]:
                         b.turn_right()
                         b.rotate_left()
                         
                     move_bears(arctic,list_of_bears[1:])
                     
-                    redraw(draw_api,arctic,player_bear,list_of_bears)
+                    redraw(draw_api,arctic,list_of_bears)
 
                 if (event.key == pg.K_DOWN):
+                    list_of_bears[0].destination = (0,0)
                                    
-                    animate(draw_api,arctic,player_bear,list_of_bears,fpsClock)
+                    animate(draw_api,arctic,list_of_bears,fpsClock)
                     
                     arctic.remain()
 
                     move_bears(arctic,list_of_bears[1:])
                     
-                    redraw(draw_api,arctic,player_bear,list_of_bears)
+                    redraw(draw_api,arctic,list_of_bears)
                     
                 if (event.key == pg.K_ESCAPE):
                     print(sys.getsizeof(draw_api.get_h_lookup))
