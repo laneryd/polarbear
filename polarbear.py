@@ -67,12 +67,14 @@ def main():
     
     player_bear = bear.Bear((0,0),0,BLUE,BLUE,'M')
     
-    another_bear = bear.Bear((1,3),2,RED,INVLIGHTRED,'F')
-    another_bear.put_trail(arctic)
-    yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED,'F')
-    yet_another_bear.put_trail(arctic)
+    list_of_bears = []
     
-    list_of_bears = [another_bear, yet_another_bear]
+    another_bear = bear.Bear((3,-1),0,RED,INVLIGHTRED,'F')
+    another_bear.put_trail(arctic)
+    list_of_bears.append(another_bear)
+    # yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED,'F')
+    # yet_another_bear.put_trail(arctic)
+    # list_of_bears.append(yet_another_bear)
 
     fpsClock = pygame.time.Clock()
     
