@@ -16,6 +16,7 @@ BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
 LIGHTRED      = (255,159,191)
 INVLIGHTRED   = (0,-12,-8)
+INVLIGHTBLUE  = (-12,-12,-0)
 
 # def add_trail(arctic,ia,bear):
     # ja = list(ia)
@@ -66,9 +67,12 @@ def main():
     
     arctic = geometry.Arctic(HEXDEPTH)
     
-    player_bear = bear.Bear((0,0),0,BLUE,BLUE,'M')
-    
     list_of_bears = []
+    
+    player_bear = bear.Bear((0,0),0,BLUE,INVLIGHTBLUE,'M')
+    player_bear.put_trail(arctic)
+    player_bear.destination = player_bear.position
+    list_of_bears.append(player_bear)
     
     another_bear = bear.Bear((3,-1),0,RED,INVLIGHTRED,'F')
     another_bear.put_trail(arctic)
@@ -94,10 +98,10 @@ def main():
                     
                     arctic.move_forward()
 
-                    for b in list_of_bears:
+                    for b in list_of_bears[1:]:
                         b.shift_forward()
                         
-                    move_bears(arctic,list_of_bears)
+                    move_bears(arctic,list_of_bears[1:])
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
                                        
@@ -111,7 +115,7 @@ def main():
                         b.turn_left()
                         b.rotate_right()
                         
-                    move_bears(arctic,list_of_bears)
+                    move_bears(arctic,list_of_bears[1:])
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
                      
@@ -125,16 +129,17 @@ def main():
                         b.turn_right()
                         b.rotate_left()
                         
-                    move_bears(arctic,list_of_bears)
+                    move_bears(arctic,list_of_bears[1:])
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
 
                 if (event.key == pg.K_DOWN):
+                                   
                     animate(draw_api,arctic,player_bear,list_of_bears,fpsClock)
                     
                     arctic.remain()
 
-                    move_bears(arctic,list_of_bears)
+                    move_bears(arctic,list_of_bears[1:])
                     
                     redraw(draw_api,arctic,player_bear,list_of_bears)
                     
