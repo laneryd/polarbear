@@ -18,13 +18,6 @@ LIGHTRED      = (255,159,191)
 INVLIGHTRED   = (0,-12,-8)
 INVLIGHTBLUE  = (-12,-12,-0)
 
-# def add_trail(arctic,ia,bear):
-    # ja = list(ia)
-    # for (k,hex_id) in enumerate(bear.trail):
-        # ja[arctic.center[hex_id]] = LIGHTRED
-    
-    # return ja
-
 def animate(draw_api,arctic,list_of_bears,fpsClock,cr=0,co=0):
     for astep in linspace(0,1,20):
         draw_api.clear()
@@ -55,6 +48,10 @@ def move_bears(arctic,list_of_bears):
         if not arctic.contains(b.position):
             list_of_bears.remove(b)
             print('Bear outside arctic!')
+            
+def set_purpose(arctic,list_of_bears):
+    for b in list_of_bears:
+        b.purpose()
 
 def main():
     #random.seed(0)
@@ -67,7 +64,7 @@ def main():
     
     player_bear = bear.Bear((0,0),0,BLUE,INVLIGHTBLUE,'M')
     player_bear.put_trail(arctic)
-    player_bear.destination = player_bear.position
+    player_bear.destination = (0,0)
     list_of_bears.append(player_bear)
     
     another_bear = bear.Bear((3,-1),0,RED,INVLIGHTRED,'F')
@@ -96,53 +93,54 @@ def main():
                     
                     arctic.move_forward()
 
-                    for b in list_of_bears[1:]:
+                    for b in list_of_bears:
                         b.shift_forward()
-                        
-                    move_bears(arctic,list_of_bears[1:])
                     
+                    move_bears(arctic,list_of_bears)
+                    set_purpose(arctic,list_of_bears[1:])
                     redraw(draw_api,arctic,list_of_bears)
                                        
                 if (event.key == pg.K_RIGHT):
                     cr = 1
-                    list_of_bears[0].destination = (0,0)
+                    
+                    list_of_bears[0].turn_right()
+                    
                     animate(draw_api,arctic,list_of_bears,fpsClock,cr=cr)
                                         
                     arctic.turn_right()
 
-                    for b in list_of_bears[1:]:
+                    for b in list_of_bears:
                         b.turn_left()
                         b.rotate_right()
                         
-                    move_bears(arctic,list_of_bears[1:])
-                    
+                    move_bears(arctic,list_of_bears)
+                    set_purpose(arctic,list_of_bears[1:])
                     redraw(draw_api,arctic,list_of_bears)
                      
                 if (event.key == pg.K_LEFT):
                     cr = -1
-                    list_of_bears[0].destination = (0,0)
+                    
+                    list_of_bears[0].turn_left()
                     
                     animate(draw_api,arctic,list_of_bears,fpsClock,cr=cr)
 
                     arctic.turn_left()
                     
-                    for b in list_of_bears[1:]:
+                    for b in list_of_bears:
                         b.turn_right()
                         b.rotate_left()
                         
-                    move_bears(arctic,list_of_bears[1:])
-                    
+                    move_bears(arctic,list_of_bears)
+                    set_purpose(arctic,list_of_bears[1:])
                     redraw(draw_api,arctic,list_of_bears)
 
                 if (event.key == pg.K_DOWN):
-                    list_of_bears[0].destination = (0,0)
-                                   
                     animate(draw_api,arctic,list_of_bears,fpsClock)
                     
                     arctic.remain()
 
-                    move_bears(arctic,list_of_bears[1:])
-                    
+                    move_bears(arctic,list_of_bears)
+                    set_purpose(arctic,list_of_bears[1:])
                     redraw(draw_api,arctic,list_of_bears)
                     
                 if (event.key == pg.K_ESCAPE):

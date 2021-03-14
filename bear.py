@@ -25,7 +25,7 @@ class Bear:
         if self.destination == geometry.adjacent(self.position,self.direction):
             self.position = geometry.adjacent(self.position,self.direction)
             self.exhaustion += 1
-        self.purpose()
+        #self.purpose()
         self.trail.insert(0,self.position)
         self.trail.pop()
     
