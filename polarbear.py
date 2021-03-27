@@ -67,12 +67,15 @@ def main():
     player_bear.destination = (0,0)
     list_of_bears.append(player_bear)
     
-    another_bear = bear.Bear((3,-1),0,RED,INVLIGHTRED,'F')
+    another_bear = bear.Bear((1,0),1,RED,INVLIGHTRED,'F')
     another_bear.put_trail(arctic)
     list_of_bears.append(another_bear)
     # yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED,'F')
     # yet_another_bear.put_trail(arctic)
     # list_of_bears.append(yet_another_bear)
+
+    print(draw.get_hex_distance(player_bear.position,another_bear.position))
+    print('{0:.2f}'.format(draw.get_hex_angle(player_bear.position,another_bear.position))+'°')
 
     fpsClock = pygame.time.Clock()
     

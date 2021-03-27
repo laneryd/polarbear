@@ -1,5 +1,5 @@
 import pygame
-from math import cos, sin, sqrt, pi
+from math import cos, sin, sqrt, pi, atan2
 
 HEXSIDE       = 50
 HEXSIZEFACTOR = 0.95
@@ -67,6 +67,18 @@ def get_hex_center(hexagon_id):
     y = (0.5*i+j)*SQRT3
     
     return (x,y)
+    
+def get_hex_distance(hex_id_a, hex_id_b):
+    (xa,ya) = get_hex_center(hex_id_a)
+    (xb,yb) = get_hex_center(hex_id_b)
+    
+    return sqrt((xb-xa)**2 + (yb-ya)**2)
+    
+def get_hex_angle(hex_id_a, hex_id_b):
+    (xa,ya) = get_hex_center(hex_id_a)
+    (xb,yb) = get_hex_center(hex_id_b)
+    
+    return atan2(-(xb-xa),(yb-ya))*180/pi
     
 def add_rotation(p,rotation_step):
     (x,y) = p
