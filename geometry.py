@@ -10,7 +10,7 @@ def rotate_right(hex_id):
     
 def adjacent(hex_id,direction):
     (i,j) = hex_id
-    surrounding = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),4:(i+1,j-1),5:(i+1,j)}
+    surrounding = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),-2:(i+1,j-1),-1:(i+1,j)}
     return surrounding.get(direction)
     
 def random_ice_color():    

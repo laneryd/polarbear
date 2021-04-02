@@ -74,8 +74,8 @@ def main():
     # yet_another_bear.put_trail(arctic)
     # list_of_bears.append(yet_another_bear)
 
-    print(draw.get_hex_distance(player_bear.position,another_bear.position))
-    print('{0:.2f}'.format(draw.get_hex_angle(player_bear.position,another_bear.position))+'°')
+    #print(draw.get_hex_distance(player_bear.position,another_bear.position))
+    #print('{0:.2f}'.format(draw.get_hex_angle(player_bear.position,another_bear.position))+'°')
 
     fpsClock = pygame.time.Clock()
     

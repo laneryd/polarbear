@@ -13,7 +13,7 @@ class Bear:
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):
-            self.trail.append(geometry.adjacent(self.trail[k],(self.direction+3) % 6))
+            self.trail.append(geometry.adjacent(self.trail[k],(self.direction+5) % 6 - 2))
         
         self.color      = color
         self.trailcolor = trailcolor
@@ -49,10 +49,10 @@ class Bear:
         draw_api.highlight_hexagon(self.position,self.color,off=offsum,rot=rot)
         
     def turn_left(self):
-        self.direction = (self.direction + 1) % 6
+        self.direction = (self.direction + 3) % 6 - 2
         
     def turn_right(self):
-        self.direction = (self.direction - 1) % 6
+        self.direction = (self.direction + 1) % 6 - 2
         
     def rotate_left(self):
         self.position    = geometry.rotate_left(self.position)
