@@ -50,7 +50,12 @@ def move_bears(arctic,list_of_bears):
             print('Bear outside arctic!')
             
 def set_purpose(arctic,list_of_bears):
-    for b in list_of_bears:
+    for b in list_of_bears[1:]:
+        for o in list_of_bears:
+            if o.identity != b.identity:
+                d = draw.get_hex_distance(b.position,o.position)
+                a = draw.get_hex_direction(b.position,o.position)
+                print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(a))
         b.purpose()
 
 def main():
@@ -100,7 +105,7 @@ def main():
                         b.shift_forward()
                     
                     move_bears(arctic,list_of_bears)
-                    set_purpose(arctic,list_of_bears[1:])
+                    set_purpose(arctic,list_of_bears)
                     redraw(draw_api,arctic,list_of_bears)
                                        
                 if (event.key == pg.K_RIGHT):
@@ -117,7 +122,7 @@ def main():
                         b.rotate_right()
                         
                     move_bears(arctic,list_of_bears)
-                    set_purpose(arctic,list_of_bears[1:])
+                    set_purpose(arctic,list_of_bears)
                     redraw(draw_api,arctic,list_of_bears)
                      
                 if (event.key == pg.K_LEFT):
@@ -134,7 +139,7 @@ def main():
                         b.rotate_left()
                         
                     move_bears(arctic,list_of_bears)
-                    set_purpose(arctic,list_of_bears[1:])
+                    set_purpose(arctic,list_of_bears)
                     redraw(draw_api,arctic,list_of_bears)
 
                 if (event.key == pg.K_DOWN):
@@ -143,7 +148,7 @@ def main():
                     arctic.remain()
 
                     move_bears(arctic,list_of_bears)
-                    set_purpose(arctic,list_of_bears[1:])
+                    set_purpose(arctic,list_of_bears)
                     redraw(draw_api,arctic,list_of_bears)
                     
                 if (event.key == pg.K_ESCAPE):

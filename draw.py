@@ -80,6 +80,12 @@ def get_hex_angle(hex_id_a, hex_id_b):
     
     return atan2(-(xb-xa),(yb-ya))*180/pi
     
+def get_hex_direction(hex_id_a, hex_id_b):
+    (xa,ya) = get_hex_center(hex_id_a)
+    (xb,yb) = get_hex_center(hex_id_b)
+    
+    return atan2(-(xb-xa),(yb-ya))*3/pi
+    
 def add_rotation(p,rotation_step):
     (x,y) = p
     theta = pi / 180 * (rotation_step * 60)
