@@ -55,7 +55,8 @@ def set_purpose(arctic,list_of_bears):
             if o.identity != b.identity:
                 d = draw.get_hex_distance(b.position,o.position)
                 a = draw.get_hex_direction(b.position,o.position)
-                print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(a))
+                r = b.relative_direction(a)
+                print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(r))
         b.purpose()
 
 def main():

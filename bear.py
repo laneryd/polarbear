@@ -84,3 +84,6 @@ class Bear:
             sex = 'Female'
         print('Polarbear', self.identity, 'at', self.position, 'destined for', self.destination)
         
+    def relative_direction(self,absolute_direction):
+        return (absolute_direction - self.direction + 2) % 6 - 2
+        
