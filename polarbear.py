@@ -12,6 +12,8 @@ FPS = 40
 
 HEXDEPTH = 10
 
+BEAR_ATTRACTION = 5
+
 BLUE          = (63, 63, 255)
 RED           = (255, 0, 63)
 LIGHTRED      = (255,159,191)
@@ -49,25 +51,29 @@ def move_bears(arctic,list_of_bears):
             list_of_bears.remove(b)
             print('Bear outside arctic!')
 
-def score_hexes(arctic,list_of_bears):
+
+def set_purpose(arctic,list_of_bears):
     for b in list_of_bears[1:]:
-        a = [0]*6
+        a = [0]*6   # adjacent hexes
+        c = 0       # current position
         for o in list_of_bears:
             if o.identity != b.identity:
                 for i in range(-2,4):
-                    a[i] += draw.get_hex_distance(geometry.adjacent(b.position,i),o.position)
-        print(a)
-
-            
-def set_purpose(arctic,list_of_bears):
-    for b in list_of_bears[1:]:
-        for o in list_of_bears:
-            if o.identity != b.identity:
-                d = draw.get_hex_distance(b.position,o.position)
-                a = draw.get_hex_direction(b.position,o.position)
-                r = b.relative_direction(a)
-                #print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(r))
+                    a[i] += max(0,BEAR_ATTRACTION - draw.get_hex_distance(geometry.adjacent(b.position,i),o.position))
+                c += max(0,BEAR_ATTRACTION - draw.get_hex_distance(b.position,o.position))
+        
         b.purpose()
+        print(a,c)
+            
+# def set_purpose(arctic,list_of_bears):
+    # for b in list_of_bears[1:]:
+        # for o in list_of_bears:
+            # if o.identity != b.identity:
+                # d = draw.get_hex_distance(b.position,o.position)
+                # a = draw.get_hex_direction(b.position,o.position)
+                # r = b.relative_direction(a)
+                # #print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(r))
+        # b.purpose()
 
 def main():
     #random.seed(0)
@@ -97,7 +103,7 @@ def main():
     
     redraw(draw_api,arctic,list_of_bears)
     
-    score_hexes(arctic,list_of_bears)
+    set_purpose(arctic,list_of_bears)
     
     while True:
         for event in pygame.event.get():
