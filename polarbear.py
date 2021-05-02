@@ -48,6 +48,16 @@ def move_bears(arctic,list_of_bears):
         if not arctic.contains(b.position):
             list_of_bears.remove(b)
             print('Bear outside arctic!')
+
+def score_hexes(arctic,list_of_bears):
+    for b in list_of_bears[1:]:
+        a = [0]*6
+        for o in list_of_bears:
+            if o.identity != b.identity:
+                for i in range(-2,4):
+                    a[i] += draw.get_hex_distance(geometry.adjacent(b.position,i),o.position)
+        print(a)
+
             
 def set_purpose(arctic,list_of_bears):
     for b in list_of_bears[1:]:
@@ -56,7 +66,7 @@ def set_purpose(arctic,list_of_bears):
                 d = draw.get_hex_distance(b.position,o.position)
                 a = draw.get_hex_direction(b.position,o.position)
                 r = b.relative_direction(a)
-                print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(r))
+                #print(o.identity, 'discovered at distance', '{0:.2f}'.format(d), 'and direction', '{0:.2f}'.format(r))
         b.purpose()
 
 def main():
@@ -76,9 +86,9 @@ def main():
     another_bear = bear.Bear((1,0),1,RED,INVLIGHTRED,'F')
     another_bear.put_trail(arctic)
     list_of_bears.append(another_bear)
-    # yet_another_bear = bear.Bear((-1,-3),5,RED,INVLIGHTRED,'F')
-    # yet_another_bear.put_trail(arctic)
-    # list_of_bears.append(yet_another_bear)
+    yet_another_bear = bear.Bear((-4,4),-1,RED,INVLIGHTRED,'F')
+    yet_another_bear.put_trail(arctic)
+    list_of_bears.append(yet_another_bear)
 
     #print(draw.get_hex_distance(player_bear.position,another_bear.position))
     #print('{0:.2f}'.format(draw.get_hex_angle(player_bear.position,another_bear.position))+'°')
@@ -86,6 +96,8 @@ def main():
     fpsClock = pygame.time.Clock()
     
     redraw(draw_api,arctic,list_of_bears)
+    
+    score_hexes(arctic,list_of_bears)
     
     while True:
         for event in pygame.event.get():
