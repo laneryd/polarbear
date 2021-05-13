@@ -65,9 +65,9 @@ def set_purpose(arctic,list_of_bears):
         print(b.intent)
         if amax > c:
             print(a.index(amax)%6-2)
-            b.intent = geometry.adjacent(b.position,a.index(amax)%6-2)
+            b.intent = a.index(amax)%6-2
         else:
-            b.intent = b.position
+            b.intent = None
         b.purpose()
         print(b.intent)
             

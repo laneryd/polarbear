@@ -10,7 +10,7 @@ class Bear:
         self.position    = position
         self.direction   = direction
         self.destination = geometry.adjacent(self.position,self.direction)
-        self.intent      = self.destination
+        self.intent      = direction
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):
@@ -33,10 +33,18 @@ class Bear:
     def purpose(self):
         if self.exhaustion > 3:
             self.destination = self.position
-            self.turn_left()
+            #self.turn_left()
             self.exhaustion -= 1
         else:
-            self.destination = geometry.adjacent(self.position,self.direction)
+            if self.direction == self.intent:
+                self.destination = geometry.adjacent(self.position,self.direction)
+            else:
+                self.destination = self.position
+            if self.intent is not None:
+                if self.direction > self.intent:
+                    self.turn_right()
+                if self.direction < self.intent:
+                    self.turn_left()
     
     def draw(self,draw_api,astep=0,off=(0,0),rot=0):
         if self.position != self.destination:
