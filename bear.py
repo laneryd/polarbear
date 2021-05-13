@@ -10,6 +10,7 @@ class Bear:
         self.position    = position
         self.direction   = direction
         self.destination = geometry.adjacent(self.position,self.direction)
+        self.intent      = self.destination
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):

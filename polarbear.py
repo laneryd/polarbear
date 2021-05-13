@@ -58,12 +58,18 @@ def set_purpose(arctic,list_of_bears):
         c = 0       # current position
         for o in list_of_bears:
             if o.identity != b.identity:
-                for i in range(-2,4):
-                    a[i] += max(0,BEAR_ATTRACTION - draw.get_hex_distance(geometry.adjacent(b.position,i),o.position))
+                for i in range(6):
+                    a[i] += max(0,BEAR_ATTRACTION - draw.get_hex_distance(geometry.adjacent(b.position,i%6-2),o.position))
                 c += max(0,BEAR_ATTRACTION - draw.get_hex_distance(b.position,o.position))
-        
+        amax = max(a)
+        print(b.intent)
+        if amax > c:
+            print(a.index(amax)%6-2)
+            b.intent = geometry.adjacent(b.position,a.index(amax)%6-2)
+        else:
+            b.intent = b.position
         b.purpose()
-        print(a,c)
+        print(b.intent)
             
 # def set_purpose(arctic,list_of_bears):
     # for b in list_of_bears[1:]:
