@@ -51,25 +51,30 @@ def move_bears(arctic,list_of_bears):
             list_of_bears.remove(b)
             print('Bear outside arctic!')
 
+def evaluate_hex_on_bear_position(bear_position_1,bear_position_2):
+    bear_distance = draw.get_hex_distance(bear_position_1,bear_position_2)
+    return max(0,BEAR_ATTRACTION - bear_distance)
+
 
 def set_purpose(arctic,list_of_bears):
     for b in list_of_bears[1:]:
         a = [0]*6   # adjacent hexes
         c = 0       # current position
+        a[b.direction+2] = 1
         for o in list_of_bears:
             if o.identity != b.identity:
-                for i in range(6):
-                    a[i] += max(0,BEAR_ATTRACTION - draw.get_hex_distance(geometry.adjacent(b.position,i%6-2),o.position))
-                c += max(0,BEAR_ATTRACTION - draw.get_hex_distance(b.position,o.position))
+               for i in range(6):
+                   a[i] += evaluate_hex_on_bear_position(geometry.adjacent(b.position,i%6-2),o.position)
+               c += evaluate_hex_on_bear_position(b.position,o.position)
         amax = max(a)
-        print(b.intent)
+        #print(b.intent)
         if amax > c:
-            print(a.index(amax)%6-2)
+            #print(a.index(amax)%6-2)
             b.intent = a.index(amax)%6-2
         else:
             b.intent = None
         b.purpose()
-        print(b.intent)
+        #print(b.intent)
             
 # def set_purpose(arctic,list_of_bears):
     # for b in list_of_bears[1:]:

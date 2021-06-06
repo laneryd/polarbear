@@ -1,5 +1,9 @@
 import random
 
+class Direction:
+    def __init__(self,initial_direction):
+        self.value = initial_direction
+
 def rotate_left(hex_id):
     (i,j) = hex_id
     return (i+j,-i)
