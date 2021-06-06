@@ -103,7 +103,7 @@ def main():
     another_bear = bear.Bear((1,0),1,RED,INVLIGHTRED,'F')
     another_bear.put_trail(arctic)
     list_of_bears.append(another_bear)
-    yet_another_bear = bear.Bear((-4,4),-1,RED,INVLIGHTRED,'F')
+    yet_another_bear = bear.Bear((4,4),-1,RED,INVLIGHTRED,'F')
     yet_another_bear.put_trail(arctic)
     list_of_bears.append(yet_another_bear)
 

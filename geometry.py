@@ -1,8 +1,26 @@
 import random
 
 class Direction:
-    def __init__(self,initial_direction):
-        self.value = initial_direction
+    def __init__(self,direction):
+        assert -2 <= direction <= 5
+        assert type(direction) == int
+        
+        self.value = direction % 6
+        
+    def absolute(self):
+        return self.value % 6
+        
+    def symmetrical(self):
+        return (self.value + 2) % 6 - 2
+        
+    def opposite(self):
+        return Direction((self.value + 3) % 6)
+        
+    def toTheLeft(self):
+        return Direction((self.value + 1) % 6)
+        
+    def toTheRight(self):
+        return Direction((self.value - 1) % 6)
 
 def rotate_left(hex_id):
     (i,j) = hex_id
@@ -16,6 +34,12 @@ def adjacent(hex_id,direction):
     (i,j) = hex_id
     surrounding = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),-2:(i+1,j-1),-1:(i+1,j)}
     return surrounding.get(direction)
+    
+def newAdjacent(hex_id,direction):
+    (i,j) = hex_id
+    value = direction.absolute()
+    surrounding = {0:(i,j+1),1:(i-1,j+1),2:(i-1,j),3:(i,j-1),4:(i+1,j-1),5:(i+1,j)}
+    return surrounding.get(value)
     
 def random_ice_color():    
     blue = random.randrange(16)

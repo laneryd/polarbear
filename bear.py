@@ -9,12 +9,15 @@ class Bear:
     def __init__(self,position,direction,color,trailcolor,sex):
         self.position    = position
         self.direction   = direction
-        self.destination = geometry.adjacent(self.position,self.direction)
+        self.newDirection = geometry.Direction(direction)
+        self.destination = geometry.newAdjacent(self.position,self.newDirection)
         self.intent      = direction
+        self.newIntent    = geometry.Direction(direction)
         
         self.trail = [position]
         for k in range(TRAILLENGTH-1):
-            self.trail.append(geometry.adjacent(self.trail[k],(self.direction+5) % 6 - 2))
+            #self.trail.append(geometry.adjacent(self.trail[k],(self.direction+5) % 6 - 2))
+            self.trail.append(geometry.newAdjacent(self.trail[k],self.newDirection.opposite()))
         
         self.color      = color
         self.trailcolor = trailcolor
@@ -59,9 +62,11 @@ class Bear:
         
     def turn_left(self):
         self.direction = (self.direction + 3) % 6 - 2
+        self.newDirection = self.newDirection.toTheLeft()
         
     def turn_right(self):
         self.direction = (self.direction + 1) % 6 - 2
+        self.newDirection = self.newDirection.toTheRight()
         
     def rotate_left(self):
         self.position    = geometry.rotate_left(self.position)
